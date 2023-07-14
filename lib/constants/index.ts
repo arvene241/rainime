@@ -146,3 +146,14 @@ export const Config = {
     // },
   ],
 }
+
+export const siteConfig = {
+  name: "rainime",
+  url: "rainime.vercel.app",
+  ogImage: "og.jpg",
+  description:
+    "Watch Anime for free",
+  links: {
+    github: "https://github.com/shadcn/ui",
+  },
+}
