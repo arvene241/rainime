@@ -18,7 +18,7 @@ const MobileNav = () => {
           <RxResume className="h-5 w-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-2/4">
+      <SheetContent side="left" className="w-2/3">
         <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10">
           <div className="flex flex-col space-y-2">
             {Config.sidebarNav.map((item, index) => (
