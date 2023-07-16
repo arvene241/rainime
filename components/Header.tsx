@@ -2,10 +2,11 @@ import Link from "next/link";
 import CommandMenu from "./CommandMenu";
 import MobileNav from "./MobileNav";
 import { siteConfig } from "@/lib/constants";
-import { buttonVariants } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
-import { Github, User2 } from "lucide-react";
+import { Github, Search, User2 } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 const Header = () => {
   return (
@@ -17,8 +18,25 @@ const Header = () => {
             <span className="hidden font-bold sm:inline-block">rainime</span>
           </Link>
         </div>
-        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          <div className="w-full flex-1 md:max-w-[340px] md:flex-none">
+        <div className="flex flex-1 items-center sm:space-x-2 justify-end">
+          <div className="flex sm:hidden">
+            <Dialog>
+              <DialogTrigger
+                className={cn(
+                  buttonVariants({
+                    variant: "anime",
+                  }),
+                  "text-center cursor-pointer w-9"
+                )}
+              >
+                <Search className="h-4 w-4 shrink-0 " />
+              </DialogTrigger>
+              <DialogContent className="top-[100px] sm:hidden">
+                <CommandMenu />
+              </DialogContent>
+            </Dialog>
+          </div>
+          <div className="hidden sm:flex sm:max-w-[400px] w-full ">
             <CommandMenu />
           </div>
           <nav className="flex items-center">
@@ -39,9 +57,7 @@ const Header = () => {
               </div>
             </Link>
             <ModeToggle />
-            <Link
-              href='/signin'
-            >
+            <Link href="/signin">
               <div
                 className={cn(
                   buttonVariants({

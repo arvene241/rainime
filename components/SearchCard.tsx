@@ -18,7 +18,7 @@ const SearchCard = ({ result, key }: { result: AnimeResult; key: string }) => {
               alt={result.image}
               width={50}
               height={50}
-              className="object-cover rounded-sm"
+              className="object-cover rounded-sm w-[50px] h-[70px]"
             />
           </div>
           <div className="pl-4 flex flex-col flex-1 items-left justify-center overflow-hidden">

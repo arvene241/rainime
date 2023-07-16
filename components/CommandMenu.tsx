@@ -50,7 +50,7 @@ const CommandMenu = () => {
   const filteredResults = animeResult.slice(0, 5);
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <form
         onSubmit={handleSubmit}
         className="flex items-center h-9 px-4 py-2 relative"
@@ -79,8 +79,8 @@ const CommandMenu = () => {
         </Button>
       </form>
       {isInputFocused && searchItem.length >= 2 && (
-        <div className="absolute mt-2 px-4 w-full">
-          <ul className="rounded-lg border max-h-[300px] overflow-y-auto overflow-x-hidden">
+        <div className="absolute md:mt-2 mt-6 px-4 w-full">
+          <ul className="rounded-lg border h-auto overflow-y-auto overflow-x-hidden">
             {loading ? (
               <div>Loading...</div>
             ) : (
