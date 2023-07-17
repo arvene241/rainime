@@ -3,11 +3,9 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="container flex flex-col md:flex-row gap-12">
-      <div className="w-full h-[350px]">
-        <Hero />
-      </div>
-      <div className="w-[330px]">
+    <main className="container flex flex-col lg:flex-row gap-12">
+      <Hero />
+      <div className="w-full flex-1">
         <h1>Hello world</h1>
       </div>
     </main>

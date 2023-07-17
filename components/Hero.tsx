@@ -1,18 +1,17 @@
 "use client";
 
 import { AnimeTrending } from "@/lib/types";
-import type { CustomFlowbiteTheme } from "flowbite-react";
-import { Carousel, Flowbite } from "flowbite-react";
-import Image from "next/image";
 import { useEffect, useState } from "react";
-
-const customTheme: CustomFlowbiteTheme = {
-  carousel: {},
-};
+import { Button } from "./ui/button";
+import Link from "next/link";
+import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Hero = () => {
   const [loading, setLoading] = useState(false);
   const [animeTrending, setAnimeTrending] = useState<AnimeTrending[]>([]);
+  const [curr, setCurr] = useState(0);
 
   useEffect(() => {
     const fetchedData = async () => {
@@ -35,33 +34,57 @@ const Hero = () => {
     fetchedData();
   }, []);
 
-  console.log(animeTrending);
+  const prev = () =>
+    setCurr((curr) => (curr === 0 ? animeTrending.length - 1 : curr - 1));
+  const next = () =>
+    setCurr((curr) => (curr === animeTrending.length - 1 ? 0 : curr + 1));
 
   return (
-    <Flowbite theme={{ theme: customTheme }}>
-      <Carousel>
-        {animeTrending.map((anime) => (
-          <div key={anime.id}>
+    <div className="w-full max-w-[990px] overflow-hidden relative group h-[320px] md:h-[430px]">
+      {animeTrending.map((anime, index) => (
+        <div
+          key={anime.id}
+          className={cn(
+            curr === index ? "opacity-1" : "opacity-0",
+            "absolute inset-0 w-full h-full"
+          )}
+        >
+          <Link href={`/watch/${anime.id}`} className="w-full h-full cursor-pointer">
             <Image
-              src={anime.image}
+              src={anime.cover}
               alt={anime.title.userPreferred}
               width={500}
               height={500}
-              className="w-full object-cover"
+              className="w-full h-[270px] md:h-[310px] object-cover cursor-pointer"
             />
-            <div className="h-[50px] md:hidden bg-card">
-              {anime.title.userPreferred}
-            </div>
-            <div className="hidden md:h-[100px]">
-              <div>
-                <h1>{anime.title.userPreferred}</h1>
-                <p>{anime.rating}</p>
-              </div>
-            </div>
+          </Link>
+          <div className="md:hidden p-4 bg-primary text-primary-foreground text-ellipsis overflow-hidden whitespace-nowrap font-bold">
+            {anime.title.userPreferred}
           </div>
-        ))}
-      </Carousel>
-    </Flowbite>
+          <div className="w-full hidden md:flex bg-primary text-primary-foreground px-5 gap-8 items-center justify-center h-5 md:h-[120px]">
+            <div className="flex-1">
+              <h1 className="text-lg font-bold pb-2">
+                {anime.title.userPreferred}
+              </h1>
+              <p className="text-sm overflow-hidden line-clamp-2">
+                {anime.description}
+              </p>
+            </div>
+            <Button asChild className="font-semibold text-primary bg-primary-foreground">
+              <Link href={`/watch/${anime.id}`}>Watch Now</Link>
+            </Button>
+          </div>
+        </div>
+      ))}
+      <div className="absolute right-0 bottom-[50px] md:bottom-[120px] flex items-center justify-between p-4 gap-4">
+        <Button onClick={prev} size="icon" className="rounded-full">
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+        <Button onClick={next} size="icon" className="rounded-full">
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
   );
 };
 
