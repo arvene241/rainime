@@ -12,6 +12,7 @@ const Hero = () => {
   const [loading, setLoading] = useState(false);
   const [animeTrending, setAnimeTrending] = useState<AnimeTrending[]>([]);
   const [curr, setCurr] = useState(0);
+  
 
   useEffect(() => {
     const fetchedData = async () => {
@@ -40,7 +41,7 @@ const Hero = () => {
     setCurr((curr) => (curr === animeTrending.length - 1 ? 0 : curr + 1));
 
   return (
-    <div className="w-full max-w-[990px] overflow-hidden relative group h-[320px] md:h-[430px]">
+    <section className="w-full overflow-hidden relative group h-[290px] md:h-[400px]">
       {animeTrending.map((anime, index) => (
         <div
           key={anime.id}
@@ -49,13 +50,17 @@ const Hero = () => {
             "absolute inset-0 w-full h-full"
           )}
         >
-          <Link href={`/watch/${anime.id}`} className="w-full h-full cursor-pointer">
+          <Link
+            href={`/watch/${anime.id}`}
+            className="w-full h-full cursor-pointer"
+          >
             <Image
               src={anime.cover}
               alt={anime.title.userPreferred}
-              width={500}
-              height={500}
-              className="w-full h-[270px] md:h-[310px] object-cover cursor-pointer"
+              width={1000}
+              height={1000}
+              priority
+              className="w-full h-[240px] md:h-[280px] object-cover cursor-pointer"
             />
           </Link>
           <div className="md:hidden p-4 bg-primary text-primary-foreground text-ellipsis overflow-hidden whitespace-nowrap font-bold">
@@ -70,7 +75,10 @@ const Hero = () => {
                 {anime.description}
               </p>
             </div>
-            <Button asChild className="font-semibold text-primary bg-primary-foreground">
+            <Button
+              asChild
+              className="font-semibold text-primary bg-primary-foreground"
+            >
               <Link href={`/watch/${anime.id}`}>Watch Now</Link>
             </Button>
           </div>
@@ -84,7 +92,7 @@ const Hero = () => {
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
-    </div>
+    </section>
   );
 };
 
