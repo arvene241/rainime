@@ -3,22 +3,22 @@ import { AnimeResult } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
 
-const SearchCard = ({ result, key }: { result: AnimeResult; key: string }) => {
+const SearchCard = ({ result }: { result: AnimeResult }) => {
   return (
-    <Card className="group rounded-none border-b hover:bg-accent" key={key}>
+    <Card className="group rounded-none border-b hover:bg-accent">
       <CardContent className="p-0">
         <Link
           href={`/watch/${result.title}${result.id}`}
           className="flex justify-between px-4 py-2 w-full"
           key={result.id}
         >
-          <div>
+          <div className="w-[50px] h-[70px]">
             <Image
               src={result.image}
               alt={result.image}
-              width={50}
-              height={50}
-              className="object-cover rounded-sm w-[50px] h-[70px]"
+              width={100}
+              height={100}
+              className="object-cover rounded-sm w-full h-full"
             />
           </div>
           <div className="pl-4 flex flex-col flex-1 items-left justify-center overflow-hidden">
