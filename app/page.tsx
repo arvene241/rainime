@@ -1,6 +1,6 @@
 import Hero from "@/components/Hero";
+import PopularAnime from "@/components/PopularAnime";
 import RecentlyUpdated from "@/components/RecentlyUpdated";
-import Image from "next/image";
 
 export default function Home() {
   return (
@@ -8,7 +8,7 @@ export default function Home() {
       <Hero />
       <div className="w-full flex flex-col lg:flex-row gap-12">
         <RecentlyUpdated />
-        <div>{/* Top Anime */}</div>
+        <PopularAnime />
       </div>
       {/* Airing Schedule */}
     </main>

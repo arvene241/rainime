@@ -1,48 +1,39 @@
 "use client";
 
-import { AnimeTrending } from "@/lib/types";
-import { useEffect, useState } from "react";
+import { AnimeTrending, Results } from "@/lib/types";
+import { useState } from "react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useFetch } from "@/lib/hooks/useFetch";
 
 const Hero = () => {
-  const [loading, setLoading] = useState(false);
-  const [animeTrending, setAnimeTrending] = useState<AnimeTrending[]>([]);
   const [curr, setCurr] = useState(0);
   
+  const url = `https://api.consumet.org/meta/anilist/trending`;
 
-  useEffect(() => {
-    const fetchedData = async () => {
-      setLoading(true);
+  const { loading, error, data } = useFetch<Results<AnimeTrending>>({ url });
 
-      try {
-        const res = await fetch(
-          `https://api.consumet.org/meta/anilist/trending`
-        );
-        const data = await res.json();
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-        setAnimeTrending(data.results);
-      } catch (error) {
-        console.log(error);
-      }
+  if (error || !data) {
+    return <div>{error}</div>;
+  }
 
-      setLoading(false);
-    };
-
-    fetchedData();
-  }, []);
+  const { results } = data;
 
   const prev = () =>
-    setCurr((curr) => (curr === 0 ? animeTrending.length - 1 : curr - 1));
+    setCurr((curr) => (curr === 0 ? results.length - 1 : curr - 1));
   const next = () =>
-    setCurr((curr) => (curr === animeTrending.length - 1 ? 0 : curr + 1));
+    setCurr((curr) => (curr === results.length - 1 ? 0 : curr + 1));
 
   return (
     <section className="w-full overflow-hidden relative group h-[290px] md:h-[400px]">
-      {animeTrending.map((anime, index) => (
+      {results.map((anime, index) => (
         <div
           key={anime.id}
           className={cn(
