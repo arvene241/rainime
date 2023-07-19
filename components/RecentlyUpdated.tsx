@@ -14,14 +14,14 @@ const RecentlyUpdated = () => {
   }
 
   if (error || !data) {
-    return <div>Error fetching data.</div>;
+    return <div>{error}</div>;
   }
 
   const { results } = data;
 
   return (
     <section className="w-full max-w-[990px] relative">
-      <h1 className="font-bold text-lg">Recently Updated</h1>
+      <h1 className="font-bold text-xl pb-4">Recently Updated</h1>
       <div className="flex flex-wrap w-full gap-[14px]">
         {results?.map((anime) => (
           <AnimeCard anime={anime} key={anime.episodeTitle} />
