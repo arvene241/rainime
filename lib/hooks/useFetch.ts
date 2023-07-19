@@ -6,7 +6,7 @@ interface ApiResponse<T> {
   data: T;
 }
 
-export const useFetch = <ApiResponse>({ url }: {url: string}) => {
+export const useFetch = <ApiResponse>({ url, param }: {url: string, param?: string}) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<ApiResponse | null>(null);
   const [error, setError] = useState("");
@@ -29,7 +29,7 @@ export const useFetch = <ApiResponse>({ url }: {url: string}) => {
     }
 
     fetchData();
-  }, [url]);
+  }, [url, param]);
 
 
   return { loading, error, data };

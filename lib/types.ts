@@ -22,6 +22,15 @@ interface Recommendations {
   type: string;
 }
 
+interface Episodes {
+  id: string;
+  title: string;
+  description: string;
+  number: number;
+  image: string;
+  airdate: string;
+}
+
 export interface AnimeResult {
   id: string;
   title: Title;
@@ -70,6 +79,20 @@ export interface AnimeInfo {
   rating: number;
   subOrDub: string;
   recommendations: Recommendations[];
+  episodes: Episodes[];
+}
+
+export interface PopularAnime {
+  id: string;
+  title: Title;
+  image: string;
+  description: string;
+  status: string;
+  cover: string;
+  rating: number;
+  genres: Genre;
+  totalEpisodes: number;
+  type: string;
 }
 
 export interface Results<T> {
