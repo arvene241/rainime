@@ -1,23 +1,23 @@
-"use client";
-
-import { useFetch } from "@/lib/hooks/useFetch";
-import { RecentAnime, Results } from "@/lib/types";
+import { RecentAnime } from "@/lib/types";
 import AnimeCard from "./AnimeCard";
 
-const RecentlyUpdated = () => {
+const getData = async ({ url }: { url: string }) => {
+  const res = await fetch(url);
+  const data = await res.json();
+
+  // Recommendation: handle errors
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error("Failed to fetch data");
+  }
+
+  return data.results;
+};
+
+const RecentlyUpdated = async () => {
   const url = "https://api.consumet.org/meta/anilist/recent-episodes";
 
-  const { loading, error, data } = useFetch<Results<RecentAnime>>({ url });
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error || !data) {
-    return <div>{error}</div>;
-  }
-
-  const { results } = data;
+  const results: RecentAnime[] = await getData({ url });
 
   return (
     <section className="w-full max-w-[990px] relative">

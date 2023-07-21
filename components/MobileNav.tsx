@@ -1,5 +1,10 @@
 import { RxResume } from "react-icons/rx";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Button } from "./ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -13,7 +18,7 @@ const MobileNav = () => {
       <SheetTrigger asChild>
         <Button
           variant="ghost"
-          className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+          className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
         >
           <RxResume className="h-5 w-5" />
         </Button>
@@ -24,21 +29,25 @@ const MobileNav = () => {
             {Config.sidebarNav.map((item, index) => (
               <div key={index}>
                 {item.href ? (
-                  <Link href={item.href} className="font-medium capitalize">
-                    {item.title}
-                  </Link>
+                  <SheetClose asChild>
+                    <Link href={item.href} className="font-medium capitalize">
+                      {item.title}
+                    </Link>
+                  </SheetClose>
                 ) : (
                   <div className="font-medium capitalize">{item.title}</div>
                 )}
                 <ul className="grid-cols-2 grid ">
                   {item.items.map((item) => (
                     <li key={item.href} className="">
-                      <Link
-                        href={item.href}
-                        className="text-muted-foreground capitalize"
-                      >
-                        {item.title}
-                      </Link>
+                      <SheetClose asChild>
+                        <Link
+                          href={item.href}
+                          className="text-muted-foreground capitalize"
+                        >
+                          {item.title}
+                        </Link>
+                      </SheetClose>
                     </li>
                   ))}
                 </ul>

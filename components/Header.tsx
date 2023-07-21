@@ -13,7 +13,7 @@ const Header = () => {
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur">
       <div className="container flex h-14 items-center">
         <MobileNav />
-        <div className="mr-4 hidden md:flex">
+        <div className="ml-2 mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <span className="hidden font-bold sm:inline-block">rainime</span>
           </Link>

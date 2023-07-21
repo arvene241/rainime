@@ -1,54 +1,42 @@
 "use client";
 
-import { useState } from "react";
-import { AnimeResult, Results } from "@/lib/types";
+import { useEffect, useState } from "react";
+import { AnimeResult } from "@/lib/types";
 import { Search } from "lucide-react";
 import { Input } from "./ui/input";
 import SearchCard from "./SearchCard";
 import router from "next/router";
 import { Button, buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
-import { useFetch } from "@/lib/hooks/useFetch";
 
 const CommandMenu = () => {
+  const [loading, setLoading] = useState(false);
   const [searchItem, setSearchItem] = useState("");
+  const [animeResult, setAnimeResult] = useState<AnimeResult[]>();
   const [isInputFocused, setIsInputFocused] = useState(false);
 
-  const url = "https://api.consumet.org/meta/anilist";
+  useEffect(() => {
+    const fetchedData = async () => {
+      setLoading(true);
 
-  const { loading, error, data } = useFetch<Results<AnimeResult>>({
-    url: `${url}/${searchItem}`,
-    param: searchItem,
-  });
+      try {
+        const res = await fetch(
+          `https://api.consumet.org/meta/anilist/${searchItem}`
+        );
+        const data = await res.json();
 
-  if (error || !data) {
-    return console.log(error);
-  }
+        setAnimeResult(data.results);
+      } catch (error) {
+        console.log(error);
+      }
 
-  const { results } = data;
+      setLoading(false);
+    };
 
-  // useEffect(() => {
-  //   const fetchedData = async () => {
-  //     setLoading(true);
-
-  //     try {
-  //       const res = await fetch(
-  //         `https://api.consumet.org/meta/anilist/${searchItem}`
-  //       );
-  //       const data = await res.json();
-
-  //       setAnimeResult(data.results);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-
-  //     setLoading(false);
-  //   };
-
-  //   if (searchItem.length >= 2) {
-  //     fetchedData();
-  //   }
-  // }, [searchItem]);
+    if (searchItem.length >= 2) {
+      fetchedData();
+    }
+  }, [searchItem]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchItem(e.target.value);
@@ -59,7 +47,7 @@ const CommandMenu = () => {
     router.push(`/search/${searchItem}`);
   };
 
-  const filteredResults = results?.slice(0, 5);
+  const filteredResults = animeResult?.slice(0, 5);
 
   return (
     <div className="relative w-full">
@@ -99,12 +87,12 @@ const CommandMenu = () => {
               </div>
             ) : (
               <>
-                {results?.length === 0 && (
+                {animeResult?.length === 0 && (
                   <li className="py-6 text-center text-sm bg-background text-foreground font-bold">
                     No results found.
                   </li>
                 )}
-                {filteredResults.map((result) => (
+                {filteredResults?.map((result) => (
                   <SearchCard result={result} key={result.id} />
                 ))}
               </>

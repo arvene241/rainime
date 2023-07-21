@@ -1,24 +1,24 @@
-"use client";
-
 import Image from "next/image";
-import { useFetch } from "@/lib/hooks/useFetch";
-import { Results, PopularAnime } from "@/lib/types";
+import { PopularAnime } from "@/lib/types";
 import Link from "next/link";
 
-const PopularAnime = () => {
+const getData = async ({ url }: { url: string }) => {
+  const res = await fetch(url);
+  const data = await res.json();
+
+  // Recommendation: handle errors
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error("Failed to fetch data");
+  }
+
+  return data.results;
+};
+
+const PopularAnime = async () => {
   const url = "https://api.consumet.org/meta/anilist/popular";
 
-  const { loading, error, data } = useFetch<Results<PopularAnime>>({ url });
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error || !data) {
-    return <div>{error}</div>;
-  }
-
-  const { results } = data;
+  const results: PopularAnime[] = await getData({ url });
 
   return (
     <section className="w-full h-max flex-1 bg-border pt-2 pb-5 rounded-lg">
@@ -59,7 +59,7 @@ const PopularAnime = () => {
               </div>
             ) : (
               <div
-                key={anime.title.userPreferred}
+                key={anime.title.english}
                 className="flex items-center gap-3 h-[60px] w-full px-4 relative group"
               >
                 <div className="w-[35px] h-[35px] flex items-center justify-center bg-transparent border border-[#666] text-center text-[#666] rounded group-hover:text-foreground group-hover:font-bold">

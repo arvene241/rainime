@@ -1,3 +1,5 @@
+'use client'
+
 import { Card, CardContent } from "@/components/ui/card";
 import { AnimeResult } from "@/lib/types";
 import Link from "next/link";
@@ -8,7 +10,7 @@ const SearchCard = ({ result }: { result: AnimeResult }) => {
     <Card className="group rounded-none border-b hover:bg-accent">
       <CardContent className="p-0">
         <Link
-          href={`/watch/${result.title}${result.id}`}
+          href={`info/${result.title.english}/${result.id}`}
           className="flex justify-between px-4 py-2 w-full"
           key={result.id}
         >
