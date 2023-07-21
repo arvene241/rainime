@@ -1,14 +1,14 @@
 interface Title {
   native: string;
-  romanju: string;
+  romaji: string;
   english: string;
   userPreferred: string;
 }
 
-interface Genre {
-  action: string;
-  comedy: string;
-  horror: string;
+export interface Datee {
+  year: number;
+  month: number;
+  day: number;
 }
 
 interface Recommendations {
@@ -46,7 +46,7 @@ export interface AnimeTrending {
   description: string;
   cover: string;
   image: string;
-  genres: Genre;
+  genres: string[];
   type: string;
   rating: number;
   releaseDate: string;
@@ -56,7 +56,7 @@ export interface RecentAnime {
   id: string;
   title: Title;
   image: string;
-  genres: Genre;
+  genres: string[];
   type: string;
   rating: number;
   episodeId: string;
@@ -70,9 +70,10 @@ export interface AnimeInfo {
   image: string;
   popularity: number;
   cover: string;
-  descripition: string;
+  description: string;
   status: string;
-  genres: Genre;
+  genres: string[];
+  studios: string[];
   totalEpisodes: number;
   currentEpisodes: number;
   type: string;
@@ -80,6 +81,11 @@ export interface AnimeInfo {
   subOrDub: string;
   recommendations: Recommendations[];
   episodes: Episodes[];
+  startDate: Datee;
+  endDate: Datee;
+  season: string
+  releaseDate: string;
+  duration: number;
 }
 
 export interface PopularAnime {
@@ -90,7 +96,7 @@ export interface PopularAnime {
   status: string;
   cover: string;
   rating: number;
-  genres: Genre;
+  genres: string[];
   totalEpisodes: number;
   type: string;
 }
