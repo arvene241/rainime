@@ -27,7 +27,7 @@ const Carousel = ({ results }: { results: AnimeTrending[] }) => {
           )}
         >
           <Link
-            href={`/watch/${anime.id}`}
+            href={`/info/${anime.title.english}/${anime.id}`}
             className="w-full h-full cursor-pointer"
           >
             <Image

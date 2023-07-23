@@ -24,7 +24,7 @@ const PopularAnime = async () => {
     <section className="w-full h-max flex-1 bg-border pt-2 pb-5 rounded-lg">
       <h1 className="font-bold text-xl pb-4 pt-2 px-4">Popular Anime</h1>
       <div className="w-full h-full flex flex-col gap-5">
-        {results?.map((anime, index) => (
+        {results.map((anime, index) => (
           <>
             {index == 0 ? (
               <div
@@ -74,7 +74,7 @@ const PopularAnime = async () => {
                 />
                 <h3 className="">{anime.title.userPreferred}</h3>
                 <Link
-                  href={`/anime/${anime.id}`}
+                  href={`/info/${anime.title.english}/${anime.id}`}
                   className="absolute inset-0"
                 />
               </div>

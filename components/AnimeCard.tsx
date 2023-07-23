@@ -27,7 +27,6 @@ const AnimeCard = async ({ anime }: AnimeCardProps) => {
   return (
     <div
       className="w-[calc(50%-14px)] xs:w-[calc(33.33%-14px)] md:w-[calc(25%-14px)] lg:w-[calc(20%-14px)]"
-      key={anime.episodeTitle}
     >
       <div className="w-full">
         <div className="h-[260px] relative">

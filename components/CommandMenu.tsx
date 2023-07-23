@@ -14,6 +14,16 @@ const CommandMenu = () => {
   const [searchItem, setSearchItem] = useState("");
   const [animeResult, setAnimeResult] = useState<AnimeResult[]>();
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    if (isInputFocused && searchItem.length >= 2) {
+      setOpen(true)
+    } else {
+      setOpen(false)
+    }
+  }, [isInputFocused, searchItem])
+  
 
   useEffect(() => {
     const fetchedData = async () => {
@@ -60,7 +70,7 @@ const CommandMenu = () => {
           placeholder="Search forn an anime"
           onChange={handleChange}
           onFocus={() => setIsInputFocused(true)}
-          onBlur={() => setIsInputFocused(true)}
+          onBlur={() => setIsInputFocused(false)}
           value={searchItem}
           className={cn(
             buttonVariants({
@@ -78,7 +88,7 @@ const CommandMenu = () => {
           <Search className="h-4 w-4 shrink-0 " />
         </Button>
       </form>
-      {isInputFocused && searchItem.length >= 2 && (
+      {open && (
         <div className="absolute md:mt-2 mt-6 px-4 w-full">
           <ul className="rounded-lg border h-auto overflow-y-auto overflow-x-hidden">
             {loading ? (
@@ -93,7 +103,7 @@ const CommandMenu = () => {
                   </li>
                 )}
                 {filteredResults?.map((result) => (
-                  <SearchCard result={result} key={result.id} />
+                  <SearchCard result={result} key={result.id}/>
                 ))}
               </>
             )}

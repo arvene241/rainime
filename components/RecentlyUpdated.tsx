@@ -23,7 +23,7 @@ const RecentlyUpdated = async () => {
     <section className="w-full max-w-[990px] relative">
       <h1 className="font-bold text-xl pb-4">Recently Updated</h1>
       <div className="flex flex-wrap w-full gap-[14px]">
-        {results?.map((anime) => (
+        {results.map((anime) => (
           <AnimeCard anime={anime} key={anime.episodeTitle} />
         ))}
       </div>
