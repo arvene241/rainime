@@ -8,7 +8,7 @@ interface ApiResponse<T> {
 
 export const useFetch = <ApiResponse>({ url, param }: {url: string, param?: string}) => {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<ApiResponse | null>(null);
+  const [data, setData] = useState<ApiResponse>();
   const [error, setError] = useState("");
 
   useEffect(() => {

@@ -11,7 +11,13 @@ export interface Datee {
   day: number;
 }
 
-interface Recommendations {
+export interface Sources {
+  url: string;
+  isM3U8: boolean;
+  quality: string;
+}
+
+export interface Recommendations {
   id: string;
   title: Title;
   status: string;
@@ -22,7 +28,7 @@ interface Recommendations {
   type: string;
 }
 
-interface Episodes {
+export interface Episodes {
   id: string;
   title: string;
   description: string;
