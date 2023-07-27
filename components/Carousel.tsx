@@ -35,7 +35,7 @@ const Carousel = ({ results }: { results: AnimeTrending[] }) => {
               alt={anime.title.romaji}
               width={1000}
               height={1000}
-              priority
+              loading="lazy"
               className="w-full h-[240px] md:h-[280px] object-cover cursor-pointer"
             />
           </Link>

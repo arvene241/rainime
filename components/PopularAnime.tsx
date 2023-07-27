@@ -68,8 +68,8 @@ const PopularAnime = async () => {
                 <Image
                   src={anime.image}
                   alt={anime.title.romaji}
-                  width={100}
-                  height={100}
+                  width={45}
+                  height={60}
                   className="w-[45px] h-full object-cover"
                 />
                 <h3 className="">{anime.title.romaji}</h3>
