@@ -22,17 +22,17 @@ const Carousel = ({ results }: { results: AnimeTrending[] }) => {
         <div
           key={anime.id}
           className={cn(
-            curr === index ? "opacity-1" : "opacity-0",
+            curr === index ? "opacity-1 block" : "hidden opacity-0",
             "absolute inset-0 w-full h-full"
           )}
         >
           <Link
-            href={`/info/${anime.title.english}/${anime.id}`}
+            href={`/info/${anime.title.romaji}/${anime.id}`}
             className="w-full h-full cursor-pointer"
           >
             <Image
               src={anime.cover}
-              alt={anime.title.userPreferred}
+              alt={anime.title.romaji}
               width={1000}
               height={1000}
               priority
@@ -40,12 +40,12 @@ const Carousel = ({ results }: { results: AnimeTrending[] }) => {
             />
           </Link>
           <div className="md:hidden p-4 bg-primary text-primary-foreground text-ellipsis overflow-hidden whitespace-nowrap font-bold">
-            {anime.title.userPreferred}
+            {anime.title.romaji}
           </div>
           <div className="w-full hidden md:flex bg-primary text-primary-foreground px-5 gap-8 items-center justify-center h-5 md:h-[120px]">
             <div className="flex-1">
               <h1 className="text-lg font-bold pb-2">
-                {anime.title.userPreferred}
+                {anime.title.romaji}
               </h1>
               <p className="text-sm overflow-hidden line-clamp-2">
                 {anime.description}

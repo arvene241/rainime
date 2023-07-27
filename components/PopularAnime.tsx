@@ -28,12 +28,12 @@ const PopularAnime = async () => {
           <>
             {index == 0 ? (
               <div
-                key={anime.title.userPreferred}
+                key={anime.title.romaji}
                 className="relative h-[160px]"
               >
                 <Image
                   src={anime.cover}
-                  alt={anime.title.userPreferred}
+                  alt={anime.title.romaji}
                   fill
                   sizes="100%"
                   className="object-cover"
@@ -49,17 +49,17 @@ const PopularAnime = async () => {
                     {index + 1}
                   </div>
                   <h3 className="font-bold text-white">
-                    {anime.title.userPreferred}
+                    {anime.title.romaji}
                   </h3>
                 </div>
                 <Link
-                  href={`/anime/${anime.id}`}
+                  href={`/info/${anime.title.romaji}/${anime.id}`}
                   className="absolute inset-0"
                 />
               </div>
             ) : (
               <div
-                key={anime.title.english}
+                key={anime.title.romaji}
                 className="flex items-center gap-3 h-[60px] w-full px-4 relative group"
               >
                 <div className="w-[35px] h-[35px] flex items-center justify-center bg-transparent border border-[#666] text-center text-[#666] rounded group-hover:text-foreground group-hover:font-bold">
@@ -67,14 +67,14 @@ const PopularAnime = async () => {
                 </div>
                 <Image
                   src={anime.image}
-                  alt={anime.title.userPreferred}
+                  alt={anime.title.romaji}
                   width={100}
                   height={100}
                   className="w-[45px] h-full object-cover"
                 />
-                <h3 className="">{anime.title.userPreferred}</h3>
+                <h3 className="">{anime.title.romaji}</h3>
                 <Link
-                  href={`/info/${anime.title.english}/${anime.id}`}
+                  href={`/info/${anime.title.romaji}/${anime.id}`}
                   className="absolute inset-0"
                 />
               </div>

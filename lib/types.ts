@@ -106,7 +106,3 @@ export interface PopularAnime {
   totalEpisodes: number;
   type: string;
 }
-
-export interface Results<T> {
-  results: T[];
-}

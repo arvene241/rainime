@@ -1,30 +1,53 @@
-import { RecentAnime } from "@/lib/types";
+"use client";
+
+import { AnimeInfo, RecentAnime } from "@/lib/types";
 import AnimeCard from "./AnimeCard";
+import { useEffect, useState } from "react";
+import { animeStore, recentPageStore } from "@/lib/context";
+import LoadingSkeleton from "./CardLoading";
 
-const getData = async ({ url }: { url: string }) => {
-  const res = await fetch(url);
-  const data = await res.json();
+interface RecentProps {
+  perPage?: number;
+}
 
-  // Recommendation: handle errors
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error("Failed to fetch data");
-  }
+const RecentlyUpdated = ({ perPage }: RecentProps) => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<RecentAnime[]>([]);
 
-  return data.results;
-};
+  const page = recentPageStore((state) => state.page);
+  const info: AnimeInfo = animeStore((state) => state.currentAnime);
 
-const RecentlyUpdated = async () => {
-  const url = "https://api.consumet.org/meta/anilist/recent-episodes";
+  const url = `https://api.consumet.org/meta/anilist/recent-episodes?page=${page}&perPage=${perPage}`;
 
-  const results: RecentAnime[] = await getData({ url });
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        setData(data.results);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [url]);
 
   return (
     <section className="w-full max-w-[990px] relative">
       <h1 className="font-bold text-xl pb-4">Recently Updated</h1>
       <div className="flex flex-wrap w-full gap-[14px]">
-        {results.map((anime) => (
-          <AnimeCard anime={anime} key={anime.episodeTitle} />
+        {data.map((anime) => (
+          <>
+            {loading ? (
+              <LoadingSkeleton />
+            ) : (
+              <AnimeCard anime={anime} info={info} key={anime.episodeTitle} />
+            )}
+          </>
         ))}
       </div>
     </section>

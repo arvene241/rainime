@@ -16,7 +16,7 @@ const AnimeCard = ({ reco, info }: AnimeCardProps) => {
         <div className="h-[260px] relative">
           <Image
             src={reco.image}
-            alt={reco.title.english}
+            alt={reco.title.romaji}
             width={300}
             height={300}
             className="w-full h-full object-cover rounded-sm"
@@ -31,12 +31,12 @@ const AnimeCard = ({ reco, info }: AnimeCardProps) => {
             {info.subOrDub}
           </div>
           <Link
-            href={`/info/${reco.title.english}/${reco.id}`}
+            href={`/info/${reco.title.romaji}/${reco.id}`}
             className="absolute inset-0 bg-transparent"
           />
         </div>
         <div>
-          <h3 className="font-bold text-center">{reco.title.english}</h3>
+          <h3 className="font-bold text-center">{reco.title.romaji}</h3>
         </div>
       </div>
     </div>

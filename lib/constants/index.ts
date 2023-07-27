@@ -5,42 +5,38 @@ export const Config = {
       href: "/",
       items: [],
     },
-    {
-      title: "types",
-      items: [
-        {
-          "title": "tv",
-          "href": "/tv",
-        },
-        {
-          "title": "tv_Short",
-          "href": "/tv_short",
-        },
-        {
-          "title": "ova",
-          "href": "/ova",
-        },
-        {
-          "title": "ona",
-          "href": "/ona",
-        },
-        {
-          "title": "movie",
-          "href": "/movie",
-        },
-        {
-          "title": "special",
-          "href": "/special",
-        },
-        {
-          "title": "music",
-          "href": "/music",
-        },
-      ]
-    },
+    // {
+    //   title: "types",
+    //   items: [
+    //     {
+    //       "title": "tv",
+    //       "href": "/tv",
+    //     },
+    //     {
+    //       "title": "TV_Short",
+    //       "href": "/TV_short",
+    //     },
+    //     {
+    //       "title": "ova",
+    //       "href": "/ova",
+    //     },
+    //     {
+    //       "title": "ona",
+    //       "href": "/ona",
+    //     },
+    //     {
+    //       "title": "movie",
+    //       "href": "/movie",
+    //     },
+    //     {
+    //       "title": "special",
+    //       "href": "/special",
+    //     },
+    //   ]
+    // },
     {
       title: "updated",
-      href: "/updated",
+      href: "/recently-updated",
       items: [],
     },
     {
@@ -53,16 +49,16 @@ export const Config = {
       href: "/popular",
       items: [],
     },
-    {
-      title: "ongoing",
-      href: "/ongoing",
-      items: [],
-    },
-    {
-      title: "random",
-      href: "/random",
-      items: [],
-    },
+    // {
+    //   title: "ongoing",
+    //   href: "/ongoing",
+    //   items: [],
+    // },
+    // {
+    //   title: "random",
+    //   href: "/random",
+    //   items: [],
+    // },
     // {
     //   title: "genres",
     //   items: [
