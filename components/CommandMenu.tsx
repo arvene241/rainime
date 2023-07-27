@@ -67,7 +67,7 @@ const CommandMenu = () => {
       >
         <Input
           type="text"
-          placeholder="Search forn an anime"
+          placeholder="Search anime name"
           onChange={handleChange}
           onFocus={() => setIsInputFocused(true)}
           onBlur={() => setIsInputFocused(false)}

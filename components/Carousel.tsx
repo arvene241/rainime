@@ -53,7 +53,7 @@ const Carousel = ({ results }: { results: AnimeTrending[] }) => {
             </div>
             <Button
               asChild
-              className="font-semibold text-primary bg-primary-foreground"
+              className="font-semibold text-foreground bg-background hover:bg-accent hover:text-accent-foreground"
             >
               <Link href={`/watch/${anime.id}`}>Watch Now</Link>
             </Button>

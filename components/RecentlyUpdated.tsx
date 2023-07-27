@@ -7,17 +7,18 @@ import { animeStore, recentPageStore } from "@/lib/context";
 import LoadingSkeleton from "./CardLoading";
 
 interface RecentProps {
+  pagination?: boolean
   perPage?: number;
 }
 
-const RecentlyUpdated = ({ perPage }: RecentProps) => {
+const RecentlyUpdated = ({ pagination, perPage }: RecentProps) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<RecentAnime[]>([]);
 
   const page = recentPageStore((state) => state.page);
   const info: AnimeInfo = animeStore((state) => state.currentAnime);
 
-  const url = `https://api.consumet.org/meta/anilist/recent-episodes?page=${page}&perPage=${perPage}`;
+  const url = `https://api.consumet.org/meta/anilist/recent-episodes?page=${pagination ? page : 1}&perPage=${perPage}`;
 
   useEffect(() => {
     const fetchData = async () => {
