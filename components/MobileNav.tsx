@@ -37,7 +37,7 @@ const MobileNav = () => {
                 ) : (
                   <div className="font-medium capitalize">{item.title}</div>
                 )}
-                <ul className="grid-cols-2 grid ">
+                {/* <ul className="grid-cols-2 grid ">
                   {item.items.map((item) => (
                     <li key={item.href} className="">
                       <SheetClose asChild>
@@ -50,7 +50,7 @@ const MobileNav = () => {
                       </SheetClose>
                     </li>
                   ))}
-                </ul>
+                </ul> */}
                 <Separator className="my-2" />
               </div>
             ))}
