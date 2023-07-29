@@ -44,6 +44,11 @@ export const Config = {
       href: "/trending",
       items: [],
     },
+    // {
+    //   title: "random",
+    //   href: "/random",
+    //   items: [],
+    // },
     {
       title: "popular",
       href: "/popular",
@@ -52,11 +57,6 @@ export const Config = {
     // {
     //   title: "ongoing",
     //   href: "/ongoing",
-    //   items: [],
-    // },
-    // {
-    //   title: "random",
-    //   href: "/random",
     //   items: [],
     // },
     // {

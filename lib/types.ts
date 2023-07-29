@@ -44,6 +44,8 @@ export interface AnimeResult {
   type: string;
   rating: number;
   releaseDate: string;
+  currentEpisodeCount: number;
+  totalEpisodes: number;
 }
 
 export interface AnimeTrending {
