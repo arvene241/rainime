@@ -25,7 +25,7 @@ const VideoPlayer = ({ anime, id }: { anime: Sources[]; id: string }) => {
   return (
     <div className="w-full">
       <h1 className="font-bold text-sm pb-4">Watching: {data.title.romaji}</h1>
-      <div className="h-[560px]">
+      <div className="h-auto max-h-[560px]">
         <Player poster={data.episodes[episodeIndex].image} autoPlay={false}>
           <PosterImage poster={data.episodes[episodeIndex].image} />
           <HlsSource isVideoChild src={anime[2].url} />

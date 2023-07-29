@@ -150,6 +150,6 @@ export const siteConfig = {
   description:
     "Watch Anime for free",
   links: {
-    github: "https://github.com/shadcn/ui",
+    github: "https://github.com/arvene241/rainime",
   },
 }

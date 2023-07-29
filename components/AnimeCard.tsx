@@ -24,9 +24,9 @@ const AnimeCard = ({ anime }: AnimeCardProps) => {
           <div className="absolute bottom-0 left-0 bg-[#023047] p-1 text-white text-xs font-semibold rounded-sm">
             Ep {" "}
             {anime.episodes && anime.episodes} {" "}
-            {anime.currentEpisodeCount && `${anime.currentEpisodeCount} / ${anime.totalEpisodes}`}{" "}
+            {anime.currentEpisodeCount && `${anime.currentEpisodeCount} /`}{" "}
+            {anime.totalEpisodes}
             {anime.episodeNumber && anime.episodeNumber}{" "}
-            {anime.totalEpisodes && anime.totalEpisodes}
           </div>
           <Link
             href={`/info/${anime.title.romaji}/${anime.id}`}
