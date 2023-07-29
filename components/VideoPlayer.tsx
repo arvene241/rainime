@@ -23,21 +23,24 @@ const VideoPlayer = ({ anime, id }: { anime: Sources[]; id: string }) => {
   const episodeIndex = data.episodes.findIndex(isEpisode);
 
   return (
-    <div>
-      <Player poster={data.episodes[episodeIndex].image} autoPlay={false}>
-        <PosterImage poster={data.episodes[episodeIndex].image} />
-        <HlsSource isVideoChild src={anime[2].url} />
+    <div className="w-full">
+      <h1 className="font-bold text-sm pb-4">Watching: {data.title.romaji}</h1>
+      <div className="h-[560px]">
+        <Player poster={data.episodes[episodeIndex].image} autoPlay={false}>
+          <PosterImage poster={data.episodes[episodeIndex].image} />
+          <HlsSource isVideoChild src={anime[2].url} />
 
-        <BigPlayButton position="center" />
-        <LoadingSpinner />
+          <BigPlayButton position="center" />
+          <LoadingSpinner />
 
-        <ControlBar>
-          <PlayToggle />
-          <ReplayControl seconds={5} />
-          <ForwardControl seconds={5} />
-          <VolumeMenuButton vertical />
-        </ControlBar>
-      </Player>
+          <ControlBar>
+            <PlayToggle />
+            <ReplayControl seconds={5} />
+            <ForwardControl seconds={5} />
+            <VolumeMenuButton vertical />
+          </ControlBar>
+        </Player>
+      </div>
     </div>
   );
 };

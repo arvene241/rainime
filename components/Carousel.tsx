@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cleanDescription, cn } from "@/lib/utils";
 
 const Carousel = ({ results }: { results: AnimeTrending[] }) => {
   const [curr, setCurr] = useState(0);
@@ -48,14 +48,14 @@ const Carousel = ({ results }: { results: AnimeTrending[] }) => {
                 {anime.title.romaji}
               </h1>
               <p className="text-sm overflow-hidden line-clamp-2">
-                {anime.description}
+                {cleanDescription(anime.description)}
               </p>
             </div>
             <Button
               asChild
               className="font-semibold text-foreground bg-background hover:bg-accent hover:text-accent-foreground"
             >
-              <Link href={`/watch/${anime.id}`}>Watch Now</Link>
+              <Link href={`/info/${anime.title.romaji}/${anime.id}`}>Watch Now</Link>
             </Button>
           </div>
         </div>

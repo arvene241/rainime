@@ -1,25 +1,70 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { recentPageStore } from "@/lib/context";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "./ui/button";
 
-const Pagination = () => {
-  const increase = recentPageStore((state) => state.increase);
-  const decrease = recentPageStore((state) => state.decrease);
-  const page = recentPageStore((state) => state.page);
+interface PaginationProps {
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  route: string;
+  param?: string;
+  value?: string | string[] | undefined;
+}
+
+const Pagination = ({
+  hasPrevPage,
+  hasNextPage,
+  route,
+  param,
+  value,
+}: PaginationProps) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
 
   return (
-    <div className="flex gap-5">
-      {page === 1 ? (
-        <Button disabled onClick={() => decrease(1)}>
-          Previous Page
-        </Button>
+    <>
+      {param ? (
+        <div className="flex gap-5 my-4">
+          <Button
+            disabled={!hasPrevPage}
+            onClick={() => {
+              router.push(`/${route}?${param}=${value}&page=${page - 1}`);
+            }}
+          >
+            Previous Page
+          </Button>
+          <Button
+            disabled={!hasNextPage}
+            onClick={() => {
+              router.push(`/${route}?${param}=${value}&page=${page + 1}`);
+            }}
+          >
+            Next Page
+          </Button>
+        </div>
       ) : (
-        <Button onClick={() => decrease(1)}>Previous Page</Button>
+        <div className="flex gap-5 my-4">
+          <Button
+            disabled={!hasPrevPage}
+            onClick={() => {
+              router.push(`/${route}?page=${page - 1}`);
+            }}
+          >
+            Previous Page
+          </Button>
+          <Button
+            disabled={!hasNextPage}
+            onClick={() => {
+              router.push(`/${route}?page=${page + 1}`);
+            }}
+          >
+            Next Page
+          </Button>
+        </div>
       )}
-
-      <Button onClick={() => increase(1)}>Next Page</Button>
-    </div>
+    </>
   );
 };
 

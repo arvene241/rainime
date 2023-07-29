@@ -1,17 +1,14 @@
 import Image from "next/image";
-import { AnimeInfo, RecentAnime } from "@/lib/types";
 import Link from "next/link";
 
+// Recent Anime Card
 interface AnimeCardProps {
-  anime: RecentAnime;
-  info: AnimeInfo;
+  anime: any;
 }
 
-const AnimeCard = ({ anime, info }: AnimeCardProps) => {
+const AnimeCard = ({ anime }: AnimeCardProps) => {
   return (
-    <div
-      className="w-[calc(50%-14px)] xs:w-[calc(33.33%-14px)] md:w-[calc(25%-14px)] lg:w-[calc(20%-14px)]"
-    >
+    <div className="w-[calc(50%-14px)] xs:w-[calc(33.33%-14px)] md:w-[calc(25%-14px)] lg:w-[calc(20%-14px)]">
       <div className="w-full">
         <div className="h-[260px] relative">
           <Image
@@ -25,10 +22,11 @@ const AnimeCard = ({ anime, info }: AnimeCardProps) => {
             HD
           </div>
           <div className="absolute bottom-0 left-0 bg-[#023047] p-1 text-white text-xs font-semibold rounded-sm">
-            Ep {anime.episodeNumber} {info.totalEpisodes && `/ ${info.totalEpisodes}`}
-          </div>
-          <div className="absolute bottom-0 right-0 bg-[#023047] p-1 text-white text-xs font-semibold rounded-sm uppercase">
-            {info.subOrDub}
+            Ep {" "}
+            {anime.episodes && anime.episodes} {" "}
+            {anime.currentEpisodeCount && `${anime.currentEpisodeCount} / ${anime.totalEpisodes}`}{" "}
+            {anime.episodeNumber && anime.episodeNumber}{" "}
+            {anime.totalEpisodes && anime.totalEpisodes}
           </div>
           <Link
             href={`/info/${anime.title.romaji}/${anime.id}`}

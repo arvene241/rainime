@@ -2,7 +2,7 @@ import Link from "next/link";
 import CommandMenu from "./CommandMenu";
 import MobileNav from "./MobileNav";
 import { siteConfig } from "@/lib/constants";
-import { Button, buttonVariants } from "./ui/button";
+import { buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { Github, Search, User2 } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";

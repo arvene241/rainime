@@ -7,7 +7,7 @@ export default function Home() {
     <main className="container flex flex-col gap-12">
       <Hero />
       <div className="w-full flex flex-col lg:flex-row gap-12">
-        <RecentlyUpdated perPage={20} />
+        <RecentlyUpdated page={1} perPage={20} />
         <PopularAnime />
       </div>
       {/* Airing Schedule */}

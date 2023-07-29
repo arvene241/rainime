@@ -2,7 +2,7 @@ import EpisodeList from "@/components/EpisodeList";
 import PopularAnime from "@/components/PopularAnime";
 import Recommendations from "@/components/Recommendations";
 import VideoPlayer from "@/components/VideoPlayer";
-import { Sources } from "@/lib/types";
+import { AnimeInfo, Sources } from "@/lib/types";
 
 const getData = async ({ url }: { url: string }) => {
   const res = await fetch(url);
@@ -20,14 +20,16 @@ const getData = async ({ url }: { url: string }) => {
 const Watch = async ({ params }: { params: { id: string } }) => {
   const url = "https://api.consumet.org/meta/anilist/watch";
 
-  const data: Sources[] = await getData({ url: `${url}/${params.id}` });
+  const sources: Sources[] = await getData({ url: `${url}/${params.id}` });
 
   return (
-    <section className="container w-full">
-      <VideoPlayer anime={data} id={params.id} />
-      <EpisodeList />
+    <section className="container w-full mt-8">
       <div className="w-full flex flex-col lg:flex-row gap-12">
-        <Recommendations />
+        <div className="w-full max-w-[990px]">
+          <VideoPlayer anime={sources} id={params.id} />
+          <EpisodeList />
+          <Recommendations />
+        </div>
         <PopularAnime />
       </div>
     </section>

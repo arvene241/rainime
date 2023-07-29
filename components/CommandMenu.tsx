@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { AnimeResult } from "@/lib/types";
 import { Search } from "lucide-react";
 import { Input } from "./ui/input";
 import SearchCard from "./SearchCard";
-import router from "next/router";
+import { usePathname, useRouter } from 'next/navigation'
 import { Button, buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
 
@@ -13,17 +13,28 @@ const CommandMenu = () => {
   const [loading, setLoading] = useState(false);
   const [searchItem, setSearchItem] = useState("");
   const [animeResult, setAnimeResult] = useState<AnimeResult[]>();
-  const [isInputFocused, setIsInputFocused] = useState(false);
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
+  const resultRef = useRef<HTMLDivElement>(null);
+  const pathName = usePathname();
+  const router = useRouter()
+  
+  useEffect(() => {
+    setOpen(false);
+    setSearchItem("");
+  }, [pathName]);
 
   useEffect(() => {
-    if (isInputFocused && searchItem.length >= 2) {
-      setOpen(true)
-    } else {
-      setOpen(false)
-    }
-  }, [isInputFocused, searchItem])
-  
+    let handler = (event: MouseEvent) => {
+      if (!resultRef.current?.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchedData = async () => {
@@ -44,6 +55,7 @@ const CommandMenu = () => {
     };
 
     if (searchItem.length >= 2) {
+      setOpen(true);
       fetchedData();
     }
   }, [searchItem]);
@@ -54,13 +66,13 @@ const CommandMenu = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push(`/search/${searchItem}`);
+    router.push(`/search?keyword=${searchItem}`);
   };
 
   const filteredResults = animeResult?.slice(0, 5);
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full" ref={resultRef}>
       <form
         onSubmit={handleSubmit}
         className="flex items-center h-9 px-4 py-2 relative"
@@ -69,8 +81,6 @@ const CommandMenu = () => {
           type="text"
           placeholder="Search anime name"
           onChange={handleChange}
-          onFocus={() => setIsInputFocused(true)}
-          onBlur={() => setIsInputFocused(false)}
           value={searchItem}
           className={cn(
             buttonVariants({
@@ -103,7 +113,7 @@ const CommandMenu = () => {
                   </li>
                 )}
                 {filteredResults?.map((result) => (
-                  <SearchCard result={result} key={result.id}/>
+                  <SearchCard result={result} key={result.id} />
                 ))}
               </>
             )}

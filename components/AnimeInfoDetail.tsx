@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { animeStore } from "@/lib/context";
+import { cleanDescription } from "@/lib/utils";
 
 const getMonthName = (month: number): string => {
   const months = [
@@ -37,13 +38,15 @@ const AnimeInfoDetail = ({ data }: { data: AnimeInfo }) => {
 
   setCurrentAnime(data);
 
+  const cleanedDescription = cleanDescription(data.description);
+
   return (
     <div className="flex flex-col mdl:flex-row py-8 px-4 justify-center gap-4 mdl:gap-8">
       {/* Image */}
       <div className="w-[130px] mdl:w-[250px] bg-foreground p-1 rounded-lg self-center">
         <Image
           src={data.image}
-          alt={data.title.userPreferred}
+          alt={data.title.romaji}
           width={300}
           height={400}
           className="rounded-lg w-full h-full object-cover"
@@ -67,17 +70,16 @@ const AnimeInfoDetail = ({ data }: { data: AnimeInfo }) => {
             </Link>
           </Button>
           {/* Description */}
-          <p className="text-xs mdl:text-sm line-clamp-6">{data.description}</p>
+          <p className="text-xs mdl:text-sm line-clamp-6">{cleanedDescription}</p>
           {/* Genres */}
           <div className="flex gap-3">
             {data.genres.map((genre) => (
-              <Link
-                href={`/genre/${genre}`}
-                className="border-transparent bg-muted text-xs text-white py-1 px-2 rounded mdl:text-sm"
+              <div
+                className="border-transparent bg-muted text-xs text-white py-1 px-2 rounded mdl:text-sm cursor-pointer"
                 key={genre}
               >
                 {genre}
-              </Link>
+              </div>
             ))}
           </div>
         </div>
@@ -85,23 +87,22 @@ const AnimeInfoDetail = ({ data }: { data: AnimeInfo }) => {
         <div className="text-xs flex flex-col gap-1 mdl:w-1/4 mdl:text-sm">
           <div>
             Type:{" "}
-            <Link
-              href={`/type/${data.type}`}
-              className="font-bold text-[#3a82ff]"
+            <span
+              className="font-bold text-[#3a82ff] cursor-pointer"
             >
               {data.type}
-            </Link>
+            </span>
           </div>
           <div>
             Studio:{" "}
-            {data.studios.map((studio) => (
-              <Link
-                href={`/studio/${studio}`}
+            {data.studios.map((studio, index) => (
+              <span
                 key={studio}
-                className="font-bold text-[#3a82ff]"
+                className="font-bold text-[#3a82ff] cursor-pointer"
               >
                 {studio}
-              </Link>
+                {index !== data.studios.length - 1 && ", "}
+              </span>
             ))}
           </div>
           <div>
@@ -110,25 +111,12 @@ const AnimeInfoDetail = ({ data }: { data: AnimeInfo }) => {
           </div>
           <div>Status: {data.status}</div>
           <div>
-            Genre:{" "}
-            {data.genres.map((genre, index) => (
-              <Link
-                href={`/genre/${genre}`}
-                key={genre}
-                className="font-bold text-[#3a82ff]"
-              >
-                {genre}
-                {index !== data.genres.length - 1 && ", "}
-              </Link>
-            ))}
-          </div>
-          <div>
-            Rating: {data.rating ? (data.rating / 20).toFixed(1) : "N/A"}/5
+            Rating: {data.rating ? `${(data.rating / 20).toFixed(1)} /5` : "N/A"}
           </div>
           <div>
             Premiered: {data.season} {data.releaseDate}
           </div>
-          <div>Duration: {data.duration} minutes</div>
+          <div>Duration: {data.duration ? `${data.duration} minutes` : "N/A"}</div>
         </div>
       </div>
     </div>

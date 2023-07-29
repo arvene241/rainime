@@ -37,6 +37,7 @@ const MobileNav = () => {
                 ) : (
                   <div className="font-medium capitalize">{item.title}</div>
                 )}
+                {/* This commented code is for items with sub items */}
                 {/* <ul className="grid-cols-2 grid ">
                   {item.items.map((item) => (
                     <li key={item.href} className="">

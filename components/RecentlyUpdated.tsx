@@ -1,55 +1,59 @@
-"use client";
-
-import { AnimeInfo, RecentAnime } from "@/lib/types";
+import { RecentAnime } from "@/lib/types";
 import AnimeCard from "./AnimeCard";
-import { useEffect, useState } from "react";
-import { animeStore, recentPageStore } from "@/lib/context";
-import LoadingSkeleton from "./CardLoading";
+import Pagination from "./Pagination";
 
-interface RecentProps {
-  pagination?: boolean
-  perPage?: number;
+const getData = async ({ url }: { url: string }) => {
+  const res = await fetch(url);
+  const data = await res.json();
+  console.log(url);
+
+  // Recommendation: handle errors
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error("Failed to fetch data");
+  }
+
+  return data;
+};
+
+interface RecentlyUpdatedProps {
+  page: number;
+  perPage: number;
+  pagination?: boolean;
 }
 
-const RecentlyUpdated = ({ pagination, perPage }: RecentProps) => {
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<RecentAnime[]>([]);
+const RecentlyUpdated = async ({
+  page,
+  perPage,
+  pagination,
+}: RecentlyUpdatedProps) => {
+  const url = "https://api.consumet.org/meta/anilist/recent-episodes";
 
-  const page = recentPageStore((state) => state.page);
-  const info: AnimeInfo = animeStore((state) => state.currentAnime);
-
-  const url = `https://api.consumet.org/meta/anilist/recent-episodes?page=${pagination ? page : 1}&perPage=${perPage}`;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
-        setData(data.results);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-  }, [url]);
+  const data = await getData({
+    url: `${url}?page=${page}&perPage=${perPage}`,
+  });
+  const results: RecentAnime[] = data.results;
 
   return (
     <section className="w-full max-w-[990px] relative">
       <h1 className="font-bold text-xl pb-4">Recently Updated</h1>
       <div className="flex flex-wrap w-full gap-[14px]">
-        {data.map((anime) => (
-          <>
-            {loading ? (
-              <LoadingSkeleton />
-            ) : (
-              <AnimeCard anime={anime} info={info} key={anime.episodeTitle} />
-            )}
-          </>
+        {results.map((anime) => (
+          <AnimeCard anime={anime} key={anime.episodeTitle} />
         ))}
+        {pagination && (
+          <div className="my-4">
+            {data.hasNextPage || page > 1 ? (
+            <Pagination
+              hasPrevPage={page > 1}
+              hasNextPage={data.hasNextPage}
+              route="trending"
+            />
+          ) : (
+            <></>
+          )}
+          </div>
+        )}
       </div>
     </section>
   );
