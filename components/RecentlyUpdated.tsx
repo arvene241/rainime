@@ -47,7 +47,7 @@ const RecentlyUpdated = async ({
             <Pagination
               hasPrevPage={page > 1}
               hasNextPage={data.hasNextPage}
-              route="trending"
+              route="recently-updated"
             />
           ) : (
             <></>
