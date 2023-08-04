@@ -11,6 +11,12 @@ interface PaginationProps {
   value?: string | string[] | undefined;
 }
 
+// @param hasPrevPage: to know when to disabled the previous button
+//        hasNextPage: to know when to disabled the next button
+//        route: the actual route of the page, ex: recent, trending, and popular
+//        param: for api calls like page, and perPage
+//        value: for actual value of the param like page=1, perPage=20
+
 const Pagination = ({
   hasPrevPage,
   hasNextPage,
