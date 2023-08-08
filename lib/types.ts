@@ -108,3 +108,11 @@ export interface PopularAnime {
   totalEpisodes: number;
   type: string;
 }
+
+export interface AnimeData {
+  currentPage: number;
+  hasNextPage: boolean;
+  totalPages: number;
+  totalResults: number;
+  results: [];
+}

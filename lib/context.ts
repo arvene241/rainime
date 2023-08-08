@@ -7,12 +7,6 @@ interface AnimeState {
   setCurrentAnime: (newAnime: AnimeInfo) => void;
 }
 
-interface recentState {
-  page: number;
-  increase: (by: number) => void;
-  decrease: (by: number) => void;
-}
-
 export const animeStore = create<AnimeState>()(
   devtools(
     persist(
@@ -26,9 +20,3 @@ export const animeStore = create<AnimeState>()(
     )
   )
 );
-
-export const recentPageStore = create<recentState>()((set) => ({
-  page: 1,
-  increase: (by) => set((state) => ({ page: state.page + by })),
-  decrease: (by) => set((state) => ({ page: state.page - by })),
-}));

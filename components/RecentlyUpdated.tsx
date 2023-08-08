@@ -1,20 +1,9 @@
-import { RecentAnime } from "@/lib/types";
+"use client";
+
+import { AnimeData, RecentAnime } from "@/lib/types";
 import AnimeCard from "./AnimeCard";
 import Pagination from "./Pagination";
-
-const getData = async ({ url }: { url: string }) => {
-  const res = await fetch(url);
-  const data = await res.json();
-  console.log(url);
-
-  // Recommendation: handle errors
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error("Failed to fetch data");
-  }
-
-  return data;
-};
+import { useEffect, useState } from "react";
 
 interface RecentlyUpdatedProps {
   page: number;
@@ -22,16 +11,35 @@ interface RecentlyUpdatedProps {
   pagination?: boolean;
 }
 
-const RecentlyUpdated = async ({
+const RecentlyUpdated = ({
   page,
   perPage,
   pagination,
 }: RecentlyUpdatedProps) => {
-  const url = "https://api.consumet.org/meta/anilist/recent-episodes";
+  const url = `https://api.consumet.org/meta/anilist/recent-episodes?page=${page}&perPage=${perPage}`;
 
-  const data = await getData({
-    url: `${url}?page=${page}&perPage=${perPage}`,
+  const [data, setData] = useState<AnimeData>({
+    currentPage: 1,
+    hasNextPage: false,
+    totalPages: 1,
+    totalResults: 1,
+    results: [],
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        setData(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
   const results: RecentAnime[] = data.results;
 
   return (
@@ -39,7 +47,7 @@ const RecentlyUpdated = async ({
       <h1 className="font-bold text-xl pb-4">Recently Updated</h1>
       <div className="flex flex-wrap w-full gap-[14px]">
         {results.map((anime) => (
-          <AnimeCard anime={anime} key={anime.episodeTitle} />
+          <AnimeCard anime={anime} key={anime.id} />
         ))}
         {pagination && (
           <div className="my-4">
@@ -47,7 +55,7 @@ const RecentlyUpdated = async ({
             <Pagination
               hasPrevPage={page > 1}
               hasNextPage={data.hasNextPage}
-              route="trending"
+              route="recently-updated"
             />
           ) : (
             <></>
