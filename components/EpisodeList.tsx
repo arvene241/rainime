@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimeInfo } from "@/lib/types";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { animeStore } from "@/lib/context";
@@ -17,7 +17,15 @@ const EpisodeList = () => {
   // Calculate the indexes of the episodes to be displayed on the current page
   const indexOfLastEpisode = currentPage * episodesPerPage;
   const indexOfFirstEpisode = indexOfLastEpisode - episodesPerPage;
-  const currentEpisodes = data.episodes.slice().reverse().slice(indexOfFirstEpisode, indexOfLastEpisode);
+  const currentEpisodes = useMemo(() => {
+    if (data.episodes[0].number === 0 || data.episodes[0].number === 1) {
+      return data.episodes.slice(indexOfFirstEpisode, indexOfLastEpisode);
+    } else {
+      return data.episodes
+        .reverse()
+        .slice(indexOfFirstEpisode, indexOfLastEpisode);
+    }
+  }, [data.episodes, indexOfFirstEpisode, indexOfLastEpisode]);
 
   return (
     <div className="w-full my-8 bg-border rounded-lg p-3">
@@ -38,13 +46,14 @@ const EpisodeList = () => {
         ))}
       </div>
       <div className="flex flex-wrap gap-3">
-        {currentEpisodes?.map((ep) => {
-          return (
-            <Button key={ep.id} size="icon" asChild>
-              <Link href={`/watch/${ep.id}`}>{ep.number}</Link>
-            </Button>
-          );
-        })}
+        {currentEpisodes &&
+          currentEpisodes.map((ep) => {
+            return (
+              <Button key={ep.id} size="icon" asChild>
+                <Link href={`/watch/${ep.id}`}>{ep.number}</Link>
+              </Button>
+            );
+          })}
       </div>
     </div>
   );

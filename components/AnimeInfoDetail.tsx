@@ -1,35 +1,11 @@
 "use client";
 
-import { AnimeInfo, Datee } from "@/lib/types";
+import { AnimeInfo } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { animeStore } from "@/lib/context";
-import { cleanDescription } from "@/lib/utils";
-
-const getMonthName = (month: number): string => {
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  return months[month] || "";
-};
-
-const formatDate = (date: Datee): string => {
-  const { year, month, day } = date;
-  const monthName = getMonthName(month);
-  return `${monthName} ${day}, ${year}`;
-};
+import { cleanDescription, formatDate } from "@/lib/utils";
 
 const AnimeInfoDetail = ({ data }: { data: AnimeInfo }) => {
   const setCurrentAnime = animeStore((state) => state.setCurrentAnime);

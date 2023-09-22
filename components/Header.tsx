@@ -44,6 +44,7 @@ const Header = () => {
               href={siteConfig.links.github}
               target="_blank"
               rel="noreferrer"
+              aria-label="Github"
             >
               <div
                 className={cn(
@@ -57,7 +58,7 @@ const Header = () => {
               </div>
             </Link>
             <ModeToggle />
-            <Link href="/signin">
+            <Link href="/signin" aria-label="Signin">
               <div
                 className={cn(
                   buttonVariants({

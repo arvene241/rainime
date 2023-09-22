@@ -61,10 +61,10 @@ const Carousel = ({ results }: { results: AnimeTrending[] }) => {
         </div>
       ))}
       <div className="absolute right-0 bottom-[50px] md:bottom-[120px] flex items-center justify-between p-4 gap-4">
-        <Button onClick={prev} size="icon" className="rounded-full">
+        <Button onClick={prev} size="icon" className="rounded-full" aria-label="Previous button" >
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <Button onClick={next} size="icon" className="rounded-full">
+        <Button onClick={next} size="icon" className="rounded-full" aria-label="Next button" >
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>

@@ -55,6 +55,7 @@ const PopularAnime = async () => {
                 <Link
                   href={`/info/${anime.title.romaji}/${anime.id}`}
                   className="absolute inset-0"
+                  aria-label="Go to anime info page"
                 />
               </div>
             ) : (
@@ -76,6 +77,7 @@ const PopularAnime = async () => {
                 <Link
                   href={`/info/${anime.title.romaji}/${anime.id}`}
                   className="absolute inset-0"
+                  aria-label="Go to anime info page"
                 />
               </div>
             )}
