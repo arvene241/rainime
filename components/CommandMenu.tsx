@@ -42,7 +42,7 @@ const CommandMenu = () => {
 
       try {
         const res = await fetch(
-          `https://api.consumet.org/meta/anilist/${searchItem}`
+          `https://consumet-mocha.vercel.app/meta/anilist/${searchItem}`
         );
         const data = await res.json();
 

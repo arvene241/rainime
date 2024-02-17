@@ -16,7 +16,7 @@ const getData = async ({ url }: { url: string }) => {
 };
 
 const PopularAnime = async () => {
-  const url = "https://api.consumet.org/meta/anilist/popular";
+  const url = "https://consumet-mocha.vercel.app/meta/anilist/popular";
 
   const results: PopularAnime[] = await getData({ url });
 

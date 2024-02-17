@@ -17,7 +17,7 @@ const RecentlyUpdated = ({
   perPage,
   pagination,
 }: RecentlyUpdatedProps) => {
-  const url = `https://api.consumet.org/meta/anilist/recent-episodes?page=${page}&perPage=${perPage}`;
+  const url = `https://consumet-mocha.vercel.app/meta/anilist/recent-episodes?page=${page}&perPage=${perPage}`;
 
   const [data, setData] = useState<AnimeData>({
     currentPage: 1,

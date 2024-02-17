@@ -18,7 +18,7 @@ const getData = async ({ url }: { url: string }) => {
 };
 
 const Watch = async ({ params }: { params: { id: string } }) => {
-  const url = "https://api.consumet.org/meta/anilist/watch";
+  const url = "https://consumet-mocha.vercel.app/meta/anilist/watch";
 
   const sources: Sources[] = await getData({ url: `${url}/${params.id}` });
 

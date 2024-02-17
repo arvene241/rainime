@@ -15,7 +15,7 @@ const getData = async ({ url }: { url: string }) => {
 };
 
 const Hero = async () => {
-  const url = `https://api.consumet.org/meta/anilist/trending`;
+  const url = `https://consumet-mocha.vercel.app/meta/anilist/trending`;
 
   const results: AnimeTrending[] = await getData({ url });
 

@@ -23,7 +23,7 @@ const Search = async ({
 }) => {
   const page = searchParams.page ? Number(searchParams.page) : 1;
 
-  const url = "https://api.consumet.org/meta/anilist/popular";
+  const url = "https://consumet-mocha.vercel.app/meta/anilist/popular";
 
   const data = await getData({
     url: `${url}?page=${page}&perPage=40`,

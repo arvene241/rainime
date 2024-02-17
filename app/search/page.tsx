@@ -24,7 +24,7 @@ const Search = async ({
   const page = searchParams.page;
   const keyword = searchParams.keyword;
 
-  const url = `https://api.consumet.org/meta/anilist`;
+  const url = `https://consumet-mocha.vercel.app/meta/anilist`;
 
   const data = await getData({
     url: `${url}/${keyword}${page ? `?page=${page}` : ""}`,
