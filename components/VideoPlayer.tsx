@@ -3,12 +3,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type Hls from "hls.js";
 import { AlertTriangle, RotateCcw } from "lucide-react";
-import type { Source } from "@/lib/types";
+import type { Source, Subtitle } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 interface VideoPlayerProps {
   sources: Source[];
-  episodeId: string;
+  subtitles?: Subtitle[];
+  /** Key for remembering the playback position. */
+  storageId: string;
   poster?: string | null;
   title: string;
 }
@@ -33,7 +35,7 @@ const labelFor = (s: Source) => {
 
 const storageKey = (id: string) => `rainime:pos:${id}`;
 
-const VideoPlayer = ({ sources, episodeId, poster, title }: VideoPlayerProps) => {
+const VideoPlayer = ({ sources, subtitles = [], storageId, poster, title }: VideoPlayerProps) => {
   const ranked = useMemo(() => rankSources(sources), [sources]);
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
@@ -48,12 +50,12 @@ const VideoPlayer = ({ sources, episodeId, poster, title }: VideoPlayerProps) =>
   // Restore the saved position once per episode.
   useEffect(() => {
     try {
-      const saved = Number(localStorage.getItem(storageKey(episodeId)));
+      const saved = Number(localStorage.getItem(storageKey(storageId)));
       resumeAt.current = saved > 5 ? saved : null;
     } catch {
       resumeAt.current = null;
     }
-  }, [episodeId]);
+  }, [storageId]);
 
   const indexRef = useRef(0);
   indexRef.current = sourceIndex;
@@ -125,9 +127,9 @@ const VideoPlayer = ({ sources, episodeId, poster, title }: VideoPlayerProps) =>
       last = video.currentTime;
       try {
         if (video.duration && video.currentTime > video.duration - 30) {
-          localStorage.removeItem(storageKey(episodeId));
+          localStorage.removeItem(storageKey(storageId));
         } else {
-          localStorage.setItem(storageKey(episodeId), String(Math.floor(video.currentTime)));
+          localStorage.setItem(storageKey(storageId), String(Math.floor(video.currentTime)));
         }
       } catch {
         /* storage unavailable: resume is a convenience only */
@@ -135,7 +137,7 @@ const VideoPlayer = ({ sources, episodeId, poster, title }: VideoPlayerProps) =>
     };
     video.addEventListener("timeupdate", onTime);
     return () => video.removeEventListener("timeupdate", onTime);
-  }, [episodeId]);
+  }, [storageId]);
 
   const changeSource = (i: number) => {
     const video = videoRef.current;
@@ -155,7 +157,18 @@ const VideoPlayer = ({ sources, episodeId, poster, title }: VideoPlayerProps) =>
           onError={fail}
           aria-label={`Video player: ${title}`}
           className={cn("h-full w-full", failed && "invisible")}
-        />
+        >
+          {subtitles.map((t, i) => (
+            <track
+              key={t.url}
+              kind="subtitles"
+              src={t.url}
+              label={t.lang}
+              srcLang={t.lang.slice(0, 2).toLowerCase()}
+              default={i === 0 && /english/i.test(t.lang)}
+            />
+          ))}
+        </video>
         {failed && (
           <div
             role="alert"
@@ -188,7 +201,7 @@ const VideoPlayer = ({ sources, episodeId, poster, title }: VideoPlayerProps) =>
 
       {ranked.length > 1 && (
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span className="label mr-1 text-sm text-muted">Quality</span>
+          <span className="mr-1 text-sm text-muted">Quality</span>
           {ranked.map((s, i) => (
             <button
               key={s.url}

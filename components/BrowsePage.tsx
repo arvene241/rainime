@@ -37,7 +37,7 @@ const BrowsePage = (props: BrowseProps) => {
               {props.kind === "episode"
                 ? props.result.ok &&
                   props.result.data.results.map((ep, i) => (
-                    <li key={`${ep.id}-${ep.episodeId}`}>
+                    <li key={`${ep.id}-${ep.episodeNumber}`}>
                       <AnimeCard kind="episode" anime={ep} priority={i < 6} />
                     </li>
                   ))

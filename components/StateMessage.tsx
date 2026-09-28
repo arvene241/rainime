@@ -38,8 +38,7 @@ export const ApiDown = ({ error }: { error: string }) => (
     title="Couldn’t load this list"
     body={
       <>
-        {error} The public API this site uses goes offline from time to time; try again in a
-        few minutes.
+        {error} Reload the page in a minute to try again.
       </>
     }
   />

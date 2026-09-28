@@ -30,15 +30,11 @@ module.exports = {
       },
       borderRadius: {
         DEFAULT: "var(--radius)",
-        card: "var(--radius-card)",
-        control: "var(--radius-control)",
-      },
-      borderWidth: {
-        DEFAULT: "var(--bw)",
+        card: "var(--radius)",
+        control: "var(--radius)",
       },
       fontFamily: {
         ui: "var(--font-ui)",
-        display: "var(--font-display)",
         num: "var(--font-num)",
       },
       boxShadow: {

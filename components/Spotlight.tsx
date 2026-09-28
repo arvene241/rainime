@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Info, Play } from "lucide-react";
 import type { AnimeSummary } from "@/lib/types";
-import { animeHref, cleanDescription, cn, formatScore, titleCase, titleOf } from "@/lib/utils";
+import { airedCount, animeHref, cleanDescription, cn, formatScore, titleCase, titleOf, watchHref } from "@/lib/utils";
 
 /**
  * Trending spotlight. The strip beneath works like cels on a peg bar:
@@ -41,7 +41,7 @@ const Spotlight = ({ items }: { items: AnimeSummary[] }) => {
 
         <div className="spot-plate absolute inset-x-0 bottom-0 p-4 sm:p-6 md:max-w-2xl md:p-10">
           <div key={index} className="rise-in">
-            <p className="label mb-2 text-sm font-semibold text-accent">
+            <p className="mb-2 text-sm font-semibold text-accent">
               Trending #{index + 1}
             </p>
             <h2 className="display spot-title text-[2rem] sm:text-[2.5rem] md:text-5xl">
@@ -56,10 +56,12 @@ const Spotlight = ({ items }: { items: AnimeSummary[] }) => {
               {cleanDescription(current.description)[0]}
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
-              <Link href={animeHref(current.id)} className="btn btn-primary">
-                <Play className="h-4 w-4 fill-current" aria-hidden="true" />
-                Start watching
-              </Link>
+              {airedCount(current) > 0 && (
+                <Link href={watchHref(current.id, 1)} className="btn btn-primary">
+                  <Play className="h-4 w-4 fill-current" aria-hidden="true" />
+                  Start watching
+                </Link>
+              )}
               <Link href={animeHref(current.id)} className="btn btn-secondary spot-secondary">
                 <Info className="h-4 w-4" aria-hidden="true" />
                 Details

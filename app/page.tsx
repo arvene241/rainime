@@ -33,7 +33,7 @@ export default async function Home() {
             recent.data.results.length > 0 ? (
               <CardGrid className="lg:grid-cols-4">
                 {recent.data.results.map((ep, i) => (
-                  <li key={`${ep.id}-${ep.episodeId}`}>
+                  <li key={`${ep.id}-${ep.episodeNumber}`}>
                     <AnimeCard kind="episode" anime={ep} priority={i < 4 && trendingList.length === 0} />
                   </li>
                 ))}
@@ -46,7 +46,7 @@ export default async function Home() {
           )}
         </Section>
 
-        <Section title="Most popular" tone="var(--tone-3)" href="/popular" className="self-start">
+        <Section title="Most popular" tone="var(--tone-1)" href="/popular" className="self-start">
           {popular.ok ? <RankList items={popular.data.results.slice(0, 10)} /> : <ApiDown error={popular.error} />}
         </Section>
       </div>

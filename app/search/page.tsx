@@ -37,7 +37,7 @@ export default async function Search({ searchParams }: Props) {
     <BrowsePage
       kind="show"
       title={`Results for “${keyword}”`}
-      tone="var(--tone-4)"
+      tone="var(--tone-2)"
       page={page}
       result={result}
       empty={`No titles match “${keyword}”. Check the spelling or try the Japanese title.`}

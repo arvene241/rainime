@@ -14,61 +14,82 @@ export interface FuzzyDate {
 export interface Paged<T> {
   currentPage: number;
   hasNextPage: boolean;
-  totalPages?: number;
-  totalResults?: number;
   results: T[];
 }
 
-/** The fields every list endpoint (trending, popular, search, recommendations) shares. */
 export interface AnimeSummary {
   id: string;
   title: Title;
-  image?: string;
-  cover?: string;
-  description?: string;
-  status?: string;
+  image?: string | null;
+  cover?: string | null;
+  color?: string | null;
+  description?: string | null;
+  status?: string | null;
   rating?: number | null;
   genres?: string[];
-  type?: string;
-  releaseDate?: string | number | null;
+  type?: string | null;
+  season?: string | null;
+  releaseDate?: number | null;
   totalEpisodes?: number | null;
-  currentEpisode?: number | null;
-  currentEpisodeCount?: number | null;
-  episodes?: number | null;
-  color?: string | null;
+  duration?: number | null;
+  nextAiring?: { episode: number; airingAt: number } | null;
 }
 
+/** An episode that aired recently, from AniList's airing schedule. */
 export interface RecentEpisode {
   id: string;
   title: Title;
-  image?: string;
-  rating?: number | null;
-  genres?: string[];
-  type?: string;
-  episodeId: string;
+  image?: string | null;
+  type?: string | null;
   episodeNumber: number;
-  episodeTitle?: string | null;
+  airingAt: number;
 }
 
-export interface Episode {
+/** A licensed streaming service listed for a show on AniList. */
+export interface StreamingLink {
+  site: string;
+  url: string;
+  color?: string | null;
+  icon?: string | null;
+  language?: string | null;
+}
+
+export interface OfficialEpisode {
+  number: number | null;
+  title: string;
+  url: string;
+  site: string;
+  thumbnail?: string | null;
+}
+
+export interface AnimeInfo extends AnimeSummary {
+  startDate?: FuzzyDate;
+  endDate?: FuzzyDate;
+  studios: string[];
+  recommendations: AnimeSummary[];
+  streamingLinks: StreamingLink[];
+  officialEpisodes: OfficialEpisode[];
+  trailer?: { id: string; site: string } | null;
+}
+
+/** An episode from the stream API (Consumet-compatible), if one is configured. */
+export interface StreamEpisode {
   id: string;
   number: number;
   title?: string | null;
-  description?: string | null;
   image?: string | null;
-  airDate?: string | null;
 }
 
-export interface AnimeInfo extends Omit<AnimeSummary, "episodes"> {
-  season?: string | null;
-  duration?: number | null;
-  popularity?: number | null;
-  subOrDub?: string | null;
-  studios?: string[];
-  startDate?: FuzzyDate;
-  endDate?: FuzzyDate;
-  recommendations?: AnimeSummary[];
-  episodes?: Episode[];
+/** The merged episode list the UI renders. */
+export interface Episode {
+  number: number;
+  title?: string | null;
+  image?: string | null;
+  /** Playable in the site's own player. */
+  streamId?: string | null;
+  /** Official page for this episode on a licensed service. */
+  officialUrl?: string | null;
+  officialSite?: string | null;
 }
 
 export interface Source {
@@ -77,7 +98,12 @@ export interface Source {
   quality?: string;
 }
 
+export interface Subtitle {
+  url: string;
+  lang: string;
+}
+
 export interface WatchData {
-  headers?: Record<string, string>;
   sources: Source[];
+  subtitles?: Subtitle[];
 }

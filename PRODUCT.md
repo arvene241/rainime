@@ -13,15 +13,15 @@ web
 
 ## Product Purpose
 
-Rainime is a free anime streaming front end. It lists recently released episodes, trending and popular shows, lets people search, read a show's details, pick an episode, and watch it in an in-page HLS player. Success means a returning fan gets from the home page to a playing episode in as few steps as possible.
+Rainime is an anime front end. It lists recently aired episodes, trending and popular shows, lets people search, read a show's details, pick an episode, and watch it: in the site's own HLS player when a stream API is configured, otherwise on the licensed service AniList lists. Success means a returning fan gets from the home page to a playing episode in as few steps as possible.
 
 ## Positioning
 
-A personal, ad-free front end over public anime metadata and stream APIs (Consumet, AniList data). It is a personal project, not a commercial service.
+A personal, ad-free front end over AniList's public metadata. It is a personal project, not a commercial service.
 
 ## Operating Context
 
-- Data comes from a Consumet API instance (`/meta/anilist/*` routes). The base URL is configurable through `CONSUMET_API_URL`; public instances go down often, so every page must degrade gracefully when the API fails.
+- Show data comes from AniList GraphQL. In-page playback needs a self-hosted Consumet-compatible API (`CONSUMET_API_URL`); without it, episodes link to licensed services. Every page must degrade gracefully when either API fails.
 - Built with Next.js App Router, Tailwind CSS, Radix primitives, hls.js. Deployed on Vercel (`rainime.vercel.app`).
 
 ## Capabilities and Constraints
@@ -33,7 +33,7 @@ A personal, ad-free front end over public anime metadata and stream APIs (Consum
 ## Brand Commitments
 
 - The name "rainime" is kept. Everything visual is open.
-- The site ships three switchable design directions; one is the default.
+- The Lightbox direction is the site's design (chosen by the owner).
 
 ## Evidence on Hand
 

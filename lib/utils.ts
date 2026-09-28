@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import type { FuzzyDate, Title } from "@/lib/types";
+import type { AnimeSummary, FuzzyDate, Title } from "@/lib/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -83,13 +83,31 @@ export function animeHref(id: string) {
   return `/info/${encodeURIComponent(id)}`;
 }
 
-export function watchHref(episodeId: string, animeId?: string) {
-  const base = `/watch/${encodeURIComponent(episodeId)}`;
-  return animeId ? `${base}?anime=${encodeURIComponent(animeId)}` : base;
+export function watchHref(animeId: string, episode: number) {
+  return `/watch/${encodeURIComponent(animeId)}/${episode}`;
+}
+
+/** "3 hours ago", "2 days ago" for a unix timestamp in seconds. */
+export function timeAgo(unixSeconds: number, now = Date.now()): string {
+  const s = Math.max(0, Math.round(now / 1000 - unixSeconds));
+  if (s < 3600) return `${Math.max(1, Math.round(s / 60))} min ago`;
+  if (s < 86400) {
+    const h = Math.round(s / 3600);
+    return `${h} hour${h === 1 ? "" : "s"} ago`;
+  }
+  const d = Math.round(s / 86400);
+  return `${d} day${d === 1 ? "" : "s"} ago`;
 }
 
 /** Reads a positive integer page number from a search param. */
 export function pageParam(value: string | string[] | undefined): number {
   const n = Number(Array.isArray(value) ? value[0] : value);
   return Number.isInteger(n) && n > 0 ? n : 1;
+}
+
+/** How many episodes have aired so far. */
+export function airedCount(anime: AnimeSummary): number {
+  if (anime.nextAiring) return Math.max(0, anime.nextAiring.episode - 1);
+  if (anime.status === "NOT_YET_RELEASED") return 0;
+  return anime.totalEpisodes ?? 0;
 }

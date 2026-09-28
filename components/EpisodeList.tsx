@@ -2,65 +2,74 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { Play } from "lucide-react";
+import { ExternalLink, Play } from "lucide-react";
 import type { Episode } from "@/lib/types";
-import { cn, formatAirDate, watchHref } from "@/lib/utils";
+import { cn, watchHref } from "@/lib/utils";
 
 const RANGE = 100;
 
 interface EpisodeListProps {
   episodes: Episode[];
   animeId: string;
-  currentId?: string;
+  current?: number;
   /** Fixed-height scrolling list, for the watch page sidebar. */
   scroll?: boolean;
 }
-
-const hasRealTitle = (ep: Episode) =>
-  Boolean(ep.title && !/^(episode|ep\.?)\s*\d+$/i.test(ep.title.trim()));
 
 /**
  * The episode list reads like an animator's exposure sheet: numbered rows,
  * ruled lines, the current row marked in blue pencil.
  */
-const EpisodeList = ({ episodes, animeId, currentId, scroll }: EpisodeListProps) => {
-  const currentIndex = currentId ? episodes.findIndex((e) => e.id === currentId) : -1;
+const EpisodeList = ({ episodes, animeId, current, scroll }: EpisodeListProps) => {
+  const currentIndex = current ? episodes.findIndex((e) => e.number === current) : -1;
   const ranges = Math.ceil(episodes.length / RANGE);
   const [range, setRange] = useState(currentIndex > 0 ? Math.floor(currentIndex / RANGE) : 0);
   const [jump, setJump] = useState("");
+  const listRef = useRef<HTMLDivElement>(null);
   const currentRef = useRef<HTMLAnchorElement>(null);
 
   const titled = useMemo(
-    () => episodes.filter(hasRealTitle).length >= episodes.length * 0.5,
+    () => episodes.filter((e) => e.title).length >= episodes.length * 0.5,
     [episodes]
   );
 
   const visible = useMemo(() => {
-    const n = Number(jump);
-    if (jump && Number.isFinite(n)) return episodes.filter((e) => String(e.number).startsWith(jump));
+    if (jump) return episodes.filter((e) => String(e.number).startsWith(jump));
     return episodes.slice(range * RANGE, range * RANGE + RANGE);
   }, [episodes, range, jump]);
 
-  // Keep the current episode in view inside the scrolling sidebar.
+  // Centre the current episode inside the sidebar without scrolling the page.
   useEffect(() => {
-    if (scroll) currentRef.current?.scrollIntoView({ block: "center" });
-  }, [scroll, currentId]);
+    const list = listRef.current;
+    const row = currentRef.current;
+    if (scroll && list && row) {
+      list.scrollTop = row.offsetTop - list.offsetTop - list.clientHeight / 2 + row.clientHeight / 2;
+    }
+  }, [scroll, current]);
 
   if (episodes.length === 0) {
     return (
       <p className="frame bg-surface px-5 py-6 text-sm text-muted">
-        No episodes are available to stream yet. New episodes usually appear within a few hours
-        of broadcast.
+        No episodes have aired yet. They&apos;ll appear here once the show starts broadcasting.
       </p>
     );
   }
 
+  const status = (ep: Episode) =>
+    ep.streamId ? (
+      <Play className="h-3.5 w-3.5 text-muted group-hover:text-accent" aria-label="Plays here" />
+    ) : ep.officialUrl ? (
+      <ExternalLink
+        className="h-3.5 w-3.5 text-muted group-hover:text-accent"
+        aria-label={`On ${ep.officialSite ?? "an official site"}`}
+      />
+    ) : null;
+
   return (
     <div className="frame overflow-hidden bg-surface">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b px-3 py-2.5 md:px-4">
-        <p className="label text-sm font-semibold">
-          <span className="num">{episodes.length}</span>{" "}
-          {episodes.length === 1 ? "episode" : "episodes"}
+        <p className="text-sm font-semibold">
+          <span className="num">{episodes.length}</span> {episodes.length === 1 ? "episode" : "episodes"}
         </p>
         <div className="flex items-center gap-2">
           {ranges > 1 && !jump && (
@@ -96,44 +105,35 @@ const EpisodeList = ({ episodes, animeId, currentId, scroll }: EpisodeListProps)
         </div>
       </div>
 
-      <div className={cn(scroll && "scroll-thin max-h-[26rem] overflow-y-auto lg:max-h-[calc(100svh-12rem)]")}>
+      <div
+        ref={listRef}
+        className={cn(scroll && "scroll-thin relative max-h-[26rem] overflow-y-auto lg:max-h-[calc(100svh-12rem)]")}
+      >
         {visible.length === 0 ? (
           <p className="px-4 py-5 text-sm text-muted">No episode {jump}.</p>
         ) : titled ? (
           <ol>
             {visible.map((ep) => {
-              const current = ep.id === currentId;
+              const isCurrent = ep.number === current;
               return (
-                <li key={ep.id} className="sheet-row last:border-b-0">
+                <li key={ep.number} className="sheet-row last:border-b-0">
                   <Link
-                    ref={current ? currentRef : undefined}
-                    href={watchHref(ep.id, animeId)}
-                    aria-current={current ? "page" : undefined}
+                    ref={isCurrent ? currentRef : undefined}
+                    href={watchHref(animeId, ep.number)}
+                    aria-current={isCurrent ? "page" : undefined}
                     className={cn(
                       "group grid min-h-12 grid-cols-[3rem_1fr_auto] items-center gap-3 px-3 py-2 md:px-4",
-                      current ? "bg-accent-2 text-on-accent-2" : "hover:bg-surface-2"
+                      isCurrent ? "bg-accent-2 text-on-accent-2" : "hover:bg-surface-2"
                     )}
                   >
-                    <span className={cn("num text-sm font-semibold", !current && "text-muted")}>
+                    <span className={cn("num text-sm font-semibold", !isCurrent && "text-muted")}>
                       {String(ep.number).padStart(2, "0")}
                     </span>
                     <span className="min-w-0 truncate text-[0.9375rem]">
-                      {hasRealTitle(ep) ? ep.title : `Episode ${ep.number}`}
+                      {ep.title || `Episode ${ep.number}`}
                     </span>
-                    <span className="flex items-center gap-2 text-xs">
-                      {current ? (
-                        <span className="label font-semibold">Now playing</span>
-                      ) : (
-                        <>
-                          <span className="num hidden text-muted sm:inline">
-                            {formatAirDate(ep.airDate)}
-                          </span>
-                          <Play
-                            className="h-3.5 w-3.5 text-muted group-hover:text-accent"
-                            aria-hidden="true"
-                          />
-                        </>
-                      )}
+                    <span className="flex items-center text-xs">
+                      {isCurrent ? <span className="font-semibold">Now playing</span> : status(ep)}
                     </span>
                   </Link>
                 </li>
@@ -143,17 +143,17 @@ const EpisodeList = ({ episodes, animeId, currentId, scroll }: EpisodeListProps)
         ) : (
           <ol className="grid grid-cols-[repeat(auto-fill,minmax(3.25rem,1fr))] gap-1.5 p-3 md:p-4">
             {visible.map((ep) => {
-              const current = ep.id === currentId;
+              const isCurrent = ep.number === current;
               return (
-                <li key={ep.id}>
+                <li key={ep.number}>
                   <Link
-                    ref={current ? currentRef : undefined}
-                    href={watchHref(ep.id, animeId)}
-                    aria-current={current ? "page" : undefined}
+                    ref={isCurrent ? currentRef : undefined}
+                    href={watchHref(animeId, ep.number)}
+                    aria-current={isCurrent ? "page" : undefined}
                     aria-label={`Episode ${ep.number}`}
                     className={cn(
                       "num flex h-11 items-center justify-center rounded border text-sm font-semibold transition-colors",
-                      current
+                      isCurrent
                         ? "border-accent-2 bg-accent-2 text-on-accent-2"
                         : "border-line bg-surface-2 hover:border-accent hover:text-accent"
                     )}

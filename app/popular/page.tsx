@@ -15,7 +15,7 @@ export default async function Popular({ searchParams }: Props) {
     <BrowsePage
       kind="show"
       title="Most popular"
-      tone="var(--tone-3)"
+      tone="var(--tone-1)"
       page={page}
       result={result}
       empty="The popular list is empty"

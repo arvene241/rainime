@@ -1,15 +1,13 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { Archivo, Dela_Gothic_One, JetBrains_Mono, Zen_Kaku_Gothic_New } from "next/font/google";
+import { Archivo, JetBrains_Mono } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import { DEFAULT_DESIGN, designs, siteConfig } from "@/lib/constants";
+import { siteConfig } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 const archivo = Archivo({
   subsets: ["latin"],
-  axes: ["wdth"],
   variable: "--font-archivo",
   display: "swap",
 });
@@ -18,65 +16,45 @@ const mono = JetBrains_Mono({
   variable: "--font-mono",
   display: "swap",
 });
-const dela = Dela_Gothic_One({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-dela",
-  display: "swap",
-});
-const zen = Zen_Kaku_Gothic_New({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  variable: "--font-zen",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: "rainime — watch anime free",
+    default: "rainime",
     template: "%s · rainime",
   },
   description: siteConfig.description,
+  applicationName: siteConfig.name,
   openGraph: {
     siteName: siteConfig.name,
     type: "website",
   },
+  appleWebApp: {
+    title: siteConfig.name,
+    statusBarStyle: "black-translucent",
+  },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1b1f27",
-  colorScheme: "dark light",
+  themeColor: "#15191f",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      data-design={DEFAULT_DESIGN}
-      suppressHydrationWarning
-      className={cn(archivo.variable, mono.variable, dela.variable, zen.variable)}
-    >
-      <body className="min-h-screen flex flex-col">
-        <ThemeProvider
-          attribute="data-design"
-          defaultTheme={DEFAULT_DESIGN}
-          themes={designs.map((d) => d.id)}
-          enableSystem={false}
-          storageKey="rainime-design"
+    <html lang="en" className={cn(archivo.variable, mono.variable)}>
+      <body className="flex min-h-screen flex-col">
+        <a
+          href="#main"
+          className="btn btn-primary sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60]"
         >
-          <a
-            href="#main"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] btn btn-primary"
-          >
-            Skip to content
-          </a>
-          <Header />
-          <main id="main" className="flex-1">
-            {children}
-          </main>
-          <Footer />
-        </ThemeProvider>
+          Skip to content
+        </a>
+        <Header />
+        <main id="main" className="flex-1">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );

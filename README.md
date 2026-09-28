@@ -1,6 +1,6 @@
 # rainime
 
-A free, ad-free anime streaming front end built with Next.js (App Router), Tailwind CSS, Radix primitives and hls.js. It lists new episodes, trending and popular shows, and offers search, show pages and an in-page HLS player.
+An anime front end built with Next.js (App Router), Tailwind CSS and hls.js. It lists what aired most recently, trending and popular shows, and has search, show pages and an episode player.
 
 ## Getting started
 
@@ -11,20 +11,20 @@ npm run dev
 
 Open http://localhost:3000.
 
-### API
+## Data
 
-All data comes from a [Consumet](https://github.com/consumet/api.consumet.org) instance (`/meta/anilist/*` routes). Public instances go offline often, so the base URL is configurable:
+**Show data** (lists, search, show pages, airing schedule, recommendations, where-to-watch links) comes from [AniList's public GraphQL API](https://docs.anilist.co). It needs no key or configuration.
+
+**Playback** is optional. Set `CONSUMET_API_URL` to a [Consumet](https://github.com/consumet)-compatible API that you host yourself, and episodes play in the site's own player:
 
 ```bash
 # .env.local
-CONSUMET_API_URL=https://your-consumet-instance.example.com
+CONSUMET_API_URL=https://your-instance.example.com
+# optional: which provider that API should use for /meta/anilist routes
+CONSUMET_PROVIDER=
 ```
 
-The default is `https://consumet-mocha.vercel.app`. When the API is down, pages show an explanation instead of crashing.
-
-## Designs
-
-The site ships three switchable design directions: **Lightbox** (default), **On Air** and **Weekly**. Visitors switch with the palette button in the header. To change the default, edit `DEFAULT_DESIGN` in `lib/constants/index.ts`. See [DESIGN.md](./DESIGN.md) for the tokens and rules.
+The site calls `/meta/anilist/episodes/{anilistId}` and `/meta/anilist/watch/{episodeId}` on that API. Without it, or when an episode isn't available there, each episode page links to the licensed services AniList lists for the show (Crunchyroll, Netflix and so on), down to the exact episode when AniList has it.
 
 ## Scripts
 
@@ -34,3 +34,5 @@ The site ships three switchable design directions: **Lightbox** (default), **On 
 | `npm run build` | Production build (type-checks and lints) |
 | `npm start` | Serve the production build |
 | `npm run lint` | ESLint |
+
+See [DESIGN.md](./DESIGN.md) for the design tokens and rules.

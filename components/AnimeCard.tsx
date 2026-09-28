@@ -2,16 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { Play } from "lucide-react";
 import type { AnimeSummary, RecentEpisode } from "@/lib/types";
-import { animeHref, cn, titleCase, titleOf, watchHref } from "@/lib/utils";
+import { animeHref, timeAgo, titleCase, titleOf, watchHref } from "@/lib/utils";
 
 type CardProps =
   | { kind: "show"; anime: AnimeSummary; priority?: boolean }
   | { kind: "episode"; anime: RecentEpisode; priority?: boolean };
 
 function episodeCount(a: AnimeSummary) {
-  const current = a.currentEpisode ?? a.currentEpisodeCount ?? null;
-  const total = a.totalEpisodes ?? a.episodes ?? null;
-  if (current && total && current !== total) return `${current}/${total} eps`;
+  const aired = a.nextAiring ? a.nextAiring.episode - 1 : null;
+  const total = a.totalEpisodes ?? null;
+  if (aired && total) return `${aired}/${total} eps`;
+  if (aired) return `${aired} eps`;
   if (total) return `${total} ${total === 1 ? "ep" : "eps"}`;
   return null;
 }
@@ -22,14 +23,12 @@ const AnimeCard = (props: CardProps) => {
 
   const href =
     props.kind === "episode"
-      ? watchHref(props.anime.episodeId, props.anime.id)
+      ? watchHref(props.anime.id, props.anime.episodeNumber)
       : animeHref(anime.id);
 
   const meta =
     props.kind === "episode"
-      ? props.anime.episodeTitle && !/^episode \d+$/i.test(props.anime.episodeTitle)
-        ? props.anime.episodeTitle
-        : titleCase(props.anime.type)
+      ? [titleCase(props.anime.type), timeAgo(props.anime.airingAt)].filter(Boolean).join(" · ")
       : [titleCase(props.anime.type), props.anime.releaseDate, episodeCount(props.anime)]
           .filter(Boolean)
           .join(" · ");
@@ -65,7 +64,7 @@ const AnimeCard = (props: CardProps) => {
             <span className="sr-only">, episode {props.anime.episodeNumber}</span>
           )}
         </h3>
-        {meta && <p className={cn("mt-1 truncate text-[0.8125rem] text-muted")}>{meta}</p>}
+        {meta && <p className="mt-1 truncate text-[0.8125rem] text-muted">{meta}</p>}
       </div>
     </Link>
   );

@@ -35,7 +35,7 @@ const Section = ({
       {href && (
         <Link
           href={href}
-          className="label group flex min-h-10 flex-none items-center whitespace-nowrap gap-1.5 text-sm font-medium text-muted hover:text-ink"
+          className="group flex min-h-10 flex-none items-center whitespace-nowrap gap-1.5 text-sm font-medium text-muted hover:text-ink"
         >
           {hrefLabel}
           <ArrowRight

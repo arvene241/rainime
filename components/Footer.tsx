@@ -8,8 +8,11 @@ const Footer = () => (
       <div className="max-w-sm">
         <Logo />
         <p className="mt-3 text-sm text-muted">
-          A personal project. rainime hosts no video; titles, artwork and streams come from
-          public anime APIs.
+          A personal project. rainime hosts no video. Show data comes from{" "}
+          <a href="https://anilist.co" target="_blank" rel="noreferrer" className="underline hover:text-ink">
+            AniList
+          </a>
+          .
         </p>
       </div>
       <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
