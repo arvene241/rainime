@@ -12,7 +12,7 @@ import StateMessage from "@/components/StateMessage";
 import Synopsis from "@/components/Synopsis";
 import VideoEmbed, { type EmbedSource } from "@/components/VideoEmbed";
 import WhereToWatch from "@/components/WhereToWatch";
-import { buildEpisodes, getAnimeInfo, officialPlaylist } from "@/lib/api";
+import { buildEpisodes, getAnimeInfo, isEmbeddable, officialPlaylist } from "@/lib/api";
 import { cleanDescription, formatDate, formatScore, titleCase, titleOf, watchHref } from "@/lib/utils";
 
 type Props = { params: { slug: string[] } };
@@ -54,12 +54,15 @@ export default async function InfoPage({ params }: Props) {
   const title = titleOf(anime.title);
   const episodes = buildEpisodes(anime);
   const playlist = officialPlaylist(anime);
+  const playlistOk = playlist ? await isEmbeddable({ kind: "youtube-playlist", id: playlist.id }) : false;
   const trailer: EmbedSource | null =
     anime.trailer?.site === "youtube"
       ? { kind: "youtube", id: anime.trailer.id }
       : anime.trailer?.site === "dailymotion"
         ? { kind: "dailymotion", id: anime.trailer.id }
         : null;
+  // Skip trailers YouTube reports as removed or not embeddable.
+  const trailerOk = trailer?.kind === "youtube" ? await isEmbeddable(trailer) : Boolean(trailer);
   const first = episodes[0];
   const latest = episodes[episodes.length - 1];
   const paragraphs = cleanDescription(anime.description);
@@ -161,7 +164,7 @@ export default async function InfoPage({ params }: Props) {
             <Synopsis paragraphs={paragraphs} />
           </div>
 
-          {trailer && (
+          {trailer && trailerOk && (
             <section aria-label="Trailer" className="mt-10 max-w-3xl">
               <h2 className="display mb-4 text-xl">Trailer</h2>
               <VideoEmbed source={trailer} title={`${title} trailer`} poster={anime.cover} label="Play trailer" />
@@ -188,7 +191,7 @@ export default async function InfoPage({ params }: Props) {
       <div className="container mt-14 flex flex-col gap-14">
         <section id="episodes" aria-label="Episodes" className="scroll-mt-24">
           <h2 className="display mb-5 text-2xl md:text-[1.75rem]">Episodes</h2>
-          <EpisodeList episodes={episodes} animeId={anime.id} allPlayHere={Boolean(playlist)} />
+          <EpisodeList episodes={episodes} animeId={anime.id} allPlayHere={playlistOk} />
         </section>
 
         {anime.recommendations.length > 0 && (

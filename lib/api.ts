@@ -321,3 +321,24 @@ export function officialPlaylist(anime: AnimeInfo) {
   }
   return null;
 }
+
+/**
+ * Asks YouTube whether a video or playlist can be embedded. oEmbed answers
+ * 401 when the owner disabled embedding and 404 when it's removed or
+ * private. Any other failure counts as "try it": the player handles the rest.
+ */
+export async function isEmbeddable(ref: { kind: "youtube" | "youtube-playlist"; id: string }) {
+  const target =
+    ref.kind === "youtube"
+      ? `https://www.youtube.com/watch?v=${ref.id}`
+      : `https://www.youtube.com/playlist?list=${ref.id}`;
+  try {
+    const res = await fetch(
+      `https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(target)}`,
+      { next: { revalidate: 24 * HOUR }, signal: AbortSignal.timeout(5_000) }
+    );
+    return !(res.status === 401 || res.status === 404);
+  } catch {
+    return true;
+  }
+}

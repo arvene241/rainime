@@ -10,7 +10,7 @@ import Section from "@/components/Section";
 import StateMessage from "@/components/StateMessage";
 import VideoEmbed from "@/components/VideoEmbed";
 import WhereToWatch from "@/components/WhereToWatch";
-import { airedCount, buildEpisodes, getAnimeInfo, officialPlaylist } from "@/lib/api";
+import { airedCount, buildEpisodes, getAnimeInfo, isEmbeddable, officialPlaylist } from "@/lib/api";
 import type { AnimeInfo, Episode } from "@/lib/types";
 import { animeHref, titleOf, watchHref } from "@/lib/utils";
 
@@ -57,8 +57,15 @@ export default async function WatchPage({ params }: Props) {
   const prev = index > 0 ? episodes[index - 1] : null;
   const next = index >= 0 && index < episodes.length - 1 ? episodes[index + 1] : null;
 
-  const playlist = episode && !episode.youtubeId ? officialPlaylist(anime) : null;
-  const playable = Boolean(episode?.youtubeId || playlist);
+  // Only offer a player for uploads YouTube says can be embedded.
+  const showPlaylist = officialPlaylist(anime);
+  const [videoOk, playlistOk] = await Promise.all([
+    episode?.youtubeId ? isEmbeddable({ kind: "youtube", id: episode.youtubeId }) : false,
+    episode && showPlaylist ? isEmbeddable({ kind: "youtube-playlist", id: showPlaylist.id }) : false,
+  ]);
+  const videoId = videoOk ? episode?.youtubeId ?? null : null;
+  const playlist = !videoId && playlistOk ? showPlaylist : null;
+  const playable = Boolean(videoId || playlist);
 
   return (
     <div className="container pt-5 md:pt-8">
@@ -76,11 +83,12 @@ export default async function WatchPage({ params }: Props) {
             <span className="sr-only">,</span> {episode?.title ?? title}
           </h1>
 
-          {episode?.youtubeId ? (
+          {videoId ? (
             <VideoEmbed
-              key={episode.youtubeId}
-              source={{ kind: "youtube", id: episode.youtubeId }}
+              key={videoId}
+              source={{ kind: "youtube", id: videoId }}
               title={`${title}, episode ${number}`}
+              poster={episode?.image ?? anime.cover ?? anime.image}
               label={`Play episode ${number}`}
             />
           ) : playlist ? (
@@ -91,7 +99,7 @@ export default async function WatchPage({ params }: Props) {
                 title={`${title}: official playlist`}
                 poster={episode?.image ?? anime.cover ?? anime.image}
                 label="Play official playlist"
-              />
+                />
               <p className="mt-3 text-sm text-muted">
                 This plays the show&apos;s official playlist on {playlist.site}. Choose episode {number} from the
                 playlist menu in the player&apos;s top-right corner. Some uploads are only available in certain
