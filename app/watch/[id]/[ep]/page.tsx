@@ -92,20 +92,19 @@ export default async function WatchPage({ params }: Props) {
               label={`Play episode ${number}`}
             />
           ) : playlist ? (
-            <>
-              <VideoEmbed
-                key={playlist.id}
-                source={{ kind: "youtube-playlist", id: playlist.id }}
-                title={`${title}: official playlist`}
-                poster={episode?.image ?? anime.cover ?? anime.image}
-                label="Play official playlist"
-                />
-              <p className="mt-3 text-sm text-muted">
-                This plays the show&apos;s official playlist on {playlist.site}. Choose episode {number} from the
-                playlist menu in the player&apos;s top-right corner. Some uploads are only available in certain
-                regions.
-              </p>
-            </>
+            <VideoEmbed
+              key={playlist.id}
+              source={{ kind: "youtube-playlist", id: playlist.id }}
+              title={`${title}: official playlist`}
+              poster={episode?.image ?? anime.cover ?? anime.image}
+              label="Play official playlist"
+              note={
+                <p className="mt-3 text-sm text-muted">
+                  This plays the show&apos;s official playlist on {playlist.site}. Choose episode {number} from the
+                  playlist menu in the player&apos;s top-right corner.
+                </p>
+              }
+            />
           ) : (
             <NotPlayable anime={anime} episode={episode} number={number} />
           )}

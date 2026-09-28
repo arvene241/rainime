@@ -24,6 +24,26 @@ export const watchUrlOf = (s: EmbedSource) => {
 const thumbOf = (s: EmbedSource) =>
   s.kind === "youtube" ? `https://i.ytimg.com/vi/${s.id}/hqdefault.jpg` : null;
 
+/** Plain-language reason for a YouTube IFrame API error code. */
+function reasonFor(code: number | null, source: EmbedSource) {
+  const playlist = source.kind === "youtube-playlist";
+  switch (code) {
+    case 100:
+      return playlist
+        ? "These videos were removed or made private on YouTube."
+        : "This video was removed or made private on YouTube.";
+    case 101:
+    case 150:
+      return "The uploader only allows playback on YouTube itself, or blocks it in your country. Try opening it on YouTube; if it’s blocked there too, use another streaming service.";
+    case 2:
+      return "YouTube didn’t recognise this video link.";
+    case 5:
+      return "Your browser couldn’t play this video.";
+    default:
+      return "YouTube couldn’t load the player. It may be blocked on this network.";
+  }
+}
+
 /* Minimal typing for the YouTube IFrame Player API. */
 interface YTPlayer {
   destroy(): void;
@@ -77,6 +97,8 @@ interface VideoEmbedProps {
   label?: string;
   /** Shown under the error message when the video won't play (e.g. other services). */
   fallback?: React.ReactNode;
+  /** Shown under the player unless it failed. */
+  note?: React.ReactNode;
   className?: string;
 }
 
@@ -86,8 +108,9 @@ interface VideoEmbedProps {
  * YouTube runs through its IFrame API so a blocked or removed video turns
  * into a clear message and a link instead of YouTube's "Video unavailable".
  */
-const VideoEmbed = ({ source, title, poster, label = "Play", fallback, className }: VideoEmbedProps) => {
+const VideoEmbed = ({ source, title, poster, label = "Play", fallback, note, className }: VideoEmbedProps) => {
   const [state, setState] = useState<"idle" | "playing" | "failed">("idle");
+  const [errorCode, setErrorCode] = useState<number | null>(null);
   const [thumbFailed, setThumbFailed] = useState(false);
   const mountRef = useRef<HTMLDivElement>(null);
   const thumb = (!thumbFailed && thumbOf(source)) || poster;
@@ -115,7 +138,12 @@ const VideoEmbed = ({ source, title, poster, label = "Play", fallback, className
             ...(source.kind === "youtube-playlist" ? { listType: "playlist", list: source.id } : {}),
           },
           // 2: bad id, 5: HTML5 error, 100: removed/private, 101/150: embedding blocked (owner or region).
-          events: { onError: () => setState("failed") },
+          events: {
+            onError: (e) => {
+              setErrorCode(e.data);
+              setState("failed");
+            },
+          },
         });
       })
       .catch(() => !cancelled && setState("failed"));
@@ -146,8 +174,7 @@ const VideoEmbed = ({ source, title, poster, label = "Play", fallback, className
           <TriangleAlert className="h-6 w-6 text-accent" aria-hidden="true" />
           <p className="display text-lg sm:text-xl">This video can’t play here</p>
           <p className="max-w-md text-sm" style={{ color: "oklch(0.86 0.012 250)" }}>
-            The uploader blocks playback on other sites or in your country. It may still play on the
-            provider&apos;s own site.
+            {reasonFor(errorCode, source)}
           </p>
           <div className="flex flex-wrap gap-2">
             <a href={watchUrlOf(source)} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
@@ -156,12 +183,18 @@ const VideoEmbed = ({ source, title, poster, label = "Play", fallback, className
             </a>
           </div>
           {fallback}
+          {errorCode != null && (
+            <p className="num text-xs" style={{ color: "oklch(0.72 0.012 250)" }}>
+              YouTube error {errorCode}
+            </p>
+          )}
         </div>
       </div>
     );
   }
 
   return (
+    <>
     <div className={frame}>
       {state === "playing" ? (
         source.kind === "dailymotion" ? (
@@ -205,6 +238,8 @@ const VideoEmbed = ({ source, title, poster, label = "Play", fallback, className
         </button>
       )}
     </div>
+    {note}
+    </>
   );
 };
 
