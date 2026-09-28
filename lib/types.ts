@@ -72,38 +72,14 @@ export interface AnimeInfo extends AnimeSummary {
   trailer?: { id: string; site: string } | null;
 }
 
-/** An episode from the stream API (Consumet-compatible), if one is configured. */
-export interface StreamEpisode {
-  id: string;
-  number: number;
-  title?: string | null;
-  image?: string | null;
-}
-
 /** The merged episode list the UI renders. */
 export interface Episode {
   number: number;
   title?: string | null;
   image?: string | null;
-  /** Playable in the site's own player. */
-  streamId?: string | null;
+  /** Official YouTube upload of this episode, playable in the site. */
+  youtubeId?: string | null;
   /** Official page for this episode on a licensed service. */
   officialUrl?: string | null;
   officialSite?: string | null;
-}
-
-export interface Source {
-  url: string;
-  isM3U8?: boolean;
-  quality?: string;
-}
-
-export interface Subtitle {
-  url: string;
-  lang: string;
-}
-
-export interface WatchData {
-  sources: Source[];
-  subtitles?: Subtitle[];
 }

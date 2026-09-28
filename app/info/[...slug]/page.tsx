@@ -10,8 +10,9 @@ import LocalTime from "@/components/LocalTime";
 import Section from "@/components/Section";
 import StateMessage from "@/components/StateMessage";
 import Synopsis from "@/components/Synopsis";
+import VideoEmbed, { type EmbedSource } from "@/components/VideoEmbed";
 import WhereToWatch from "@/components/WhereToWatch";
-import { buildEpisodes, getAnimeInfo, getStreamEpisodes, streamingEnabled } from "@/lib/api";
+import { buildEpisodes, getAnimeInfo, officialPlaylist } from "@/lib/api";
 import { cleanDescription, formatDate, formatScore, titleCase, titleOf, watchHref } from "@/lib/utils";
 
 type Props = { params: { slug: string[] } };
@@ -35,10 +36,7 @@ export default async function InfoPage({ params }: Props) {
   const id = idOf(params.slug);
   if (!id) notFound();
 
-  const [res, stream] = await Promise.all([
-    getAnimeInfo(id),
-    streamingEnabled ? getStreamEpisodes(id) : Promise.resolve(null),
-  ]);
+  const res = await getAnimeInfo(id);
   if (!res.ok) {
     if (res.status === 404) notFound();
     return (
@@ -54,7 +52,14 @@ export default async function InfoPage({ params }: Props) {
 
   const anime = res.data;
   const title = titleOf(anime.title);
-  const episodes = buildEpisodes(anime, stream?.ok ? stream.data : []);
+  const episodes = buildEpisodes(anime);
+  const playlist = officialPlaylist(anime);
+  const trailer: EmbedSource | null =
+    anime.trailer?.site === "youtube"
+      ? { kind: "youtube", id: anime.trailer.id }
+      : anime.trailer?.site === "dailymotion"
+        ? { kind: "dailymotion", id: anime.trailer.id }
+        : null;
   const first = episodes[0];
   const latest = episodes[episodes.length - 1];
   const paragraphs = cleanDescription(anime.description);
@@ -91,7 +96,7 @@ export default async function InfoPage({ params }: Props) {
         />
       </div>
 
-      <div className="container relative -mt-24 grid gap-6 sm:-mt-28 md:grid-cols-[13rem_minmax(0,1fr)] md:gap-x-10 md:gap-y-8 lg:grid-cols-[15rem_minmax(0,1fr)]">
+      <div className="container relative -mt-24 grid gap-6 sm:-mt-28 md:grid-cols-[13rem_minmax(0,1fr)] md:grid-rows-[auto_1fr] md:gap-x-10 md:gap-y-8 lg:grid-cols-[15rem_minmax(0,1fr)]">
         <div className="card-poster frame w-32 shadow-pop sm:w-40 md:col-start-1 md:row-start-1 md:w-full">
           {anime.image && (
             <Image src={anime.image} alt={`${title} poster`} fill priority sizes="240px" className="object-cover" />
@@ -155,6 +160,13 @@ export default async function InfoPage({ params }: Props) {
           <div className="mt-8">
             <Synopsis paragraphs={paragraphs} />
           </div>
+
+          {trailer && (
+            <section aria-label="Trailer" className="mt-10 max-w-3xl">
+              <h2 className="display mb-4 text-xl">Trailer</h2>
+              <VideoEmbed source={trailer} title={`${title} trailer`} poster={anime.cover} label="Play trailer" />
+            </section>
+          )}
         </div>
 
         {/* Facts sit under the poster on wider screens, after the synopsis on phones. */}
@@ -176,7 +188,7 @@ export default async function InfoPage({ params }: Props) {
       <div className="container mt-14 flex flex-col gap-14">
         <section id="episodes" aria-label="Episodes" className="scroll-mt-24">
           <h2 className="display mb-5 text-2xl md:text-[1.75rem]">Episodes</h2>
-          <EpisodeList episodes={episodes} animeId={anime.id} />
+          <EpisodeList episodes={episodes} animeId={anime.id} allPlayHere={Boolean(playlist)} />
         </section>
 
         {anime.recommendations.length > 0 && (

@@ -12,6 +12,8 @@ interface EpisodeListProps {
   episodes: Episode[];
   animeId: string;
   current?: number;
+  /** The show has an official playlist the site can play. */
+  allPlayHere?: boolean;
   /** Fixed-height scrolling list, for the watch page sidebar. */
   scroll?: boolean;
 }
@@ -20,7 +22,7 @@ interface EpisodeListProps {
  * The episode list reads like an animator's exposure sheet: numbered rows,
  * ruled lines, the current row marked in blue pencil.
  */
-const EpisodeList = ({ episodes, animeId, current, scroll }: EpisodeListProps) => {
+const EpisodeList = ({ episodes, animeId, current, allPlayHere, scroll }: EpisodeListProps) => {
   const currentIndex = current ? episodes.findIndex((e) => e.number === current) : -1;
   const ranges = Math.ceil(episodes.length / RANGE);
   const [range, setRange] = useState(currentIndex > 0 ? Math.floor(currentIndex / RANGE) : 0);
@@ -56,7 +58,7 @@ const EpisodeList = ({ episodes, animeId, current, scroll }: EpisodeListProps) =
   }
 
   const status = (ep: Episode) =>
-    ep.streamId ? (
+    ep.youtubeId || allPlayHere ? (
       <Play className="h-3.5 w-3.5 text-muted group-hover:text-accent" aria-label="Plays here" />
     ) : ep.officialUrl ? (
       <ExternalLink

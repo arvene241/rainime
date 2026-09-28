@@ -8,16 +8,9 @@ import CardGrid from "@/components/CardGrid";
 import EpisodeList from "@/components/EpisodeList";
 import Section from "@/components/Section";
 import StateMessage from "@/components/StateMessage";
-import VideoPlayer from "@/components/VideoPlayer";
+import VideoEmbed from "@/components/VideoEmbed";
 import WhereToWatch from "@/components/WhereToWatch";
-import {
-  airedCount,
-  buildEpisodes,
-  getAnimeInfo,
-  getEpisodeSources,
-  getStreamEpisodes,
-  streamingEnabled,
-} from "@/lib/api";
+import { airedCount, buildEpisodes, getAnimeInfo, officialPlaylist } from "@/lib/api";
 import type { AnimeInfo, Episode } from "@/lib/types";
 import { animeHref, titleOf, watchHref } from "@/lib/utils";
 
@@ -41,10 +34,7 @@ export default async function WatchPage({ params }: Props) {
   const number = epOf(params.ep);
   if (!number) notFound();
 
-  const [info, stream] = await Promise.all([
-    getAnimeInfo(params.id),
-    streamingEnabled ? getStreamEpisodes(params.id) : Promise.resolve(null),
-  ]);
+  const info = await getAnimeInfo(params.id);
 
   if (!info.ok) {
     if (info.status === 404) notFound();
@@ -61,13 +51,14 @@ export default async function WatchPage({ params }: Props) {
 
   const anime = info.data;
   const title = titleOf(anime.title);
-  const episodes = buildEpisodes(anime, stream?.ok ? stream.data : []);
+  const episodes = buildEpisodes(anime);
   const index = episodes.findIndex((e) => e.number === number);
   const episode = index >= 0 ? episodes[index] : null;
   const prev = index > 0 ? episodes[index - 1] : null;
   const next = index >= 0 && index < episodes.length - 1 ? episodes[index + 1] : null;
 
-  const sources = episode?.streamId ? await getEpisodeSources(episode.streamId) : null;
+  const playlist = episode && !episode.youtubeId ? officialPlaylist(anime) : null;
+  const playable = Boolean(episode?.youtubeId || playlist);
 
   return (
     <div className="container pt-5 md:pt-8">
@@ -85,20 +76,33 @@ export default async function WatchPage({ params }: Props) {
             <span className="sr-only">,</span> {episode?.title ?? title}
           </h1>
 
-          {sources?.ok ? (
-            <VideoPlayer
-              key={`${anime.id}-${number}`}
-              sources={sources.data.sources}
-              subtitles={sources.data.subtitles ?? []}
-              storageId={`${anime.id}-${number}`}
-              poster={episode?.image ?? anime.cover}
+          {episode?.youtubeId ? (
+            <VideoEmbed
+              key={episode.youtubeId}
+              source={{ kind: "youtube", id: episode.youtubeId }}
               title={`${title}, episode ${number}`}
+              label={`Play episode ${number}`}
             />
+          ) : playlist ? (
+            <>
+              <VideoEmbed
+                key={playlist.id}
+                source={{ kind: "youtube-playlist", id: playlist.id }}
+                title={`${title}: official playlist`}
+                poster={episode?.image ?? anime.cover ?? anime.image}
+                label="Play official playlist"
+              />
+              <p className="mt-3 text-sm text-muted">
+                This plays the show&apos;s official playlist on {playlist.site}. Choose episode {number} from the
+                playlist menu in the player&apos;s top-right corner. Some uploads are only available in certain
+                regions.
+              </p>
+            </>
           ) : (
             <NotPlayable anime={anime} episode={episode} number={number} />
           )}
 
-          {sources?.ok && anime.streamingLinks.length > 0 && (
+          {playable && anime.streamingLinks.length > 0 && (
             <div className="mt-5">
               <h2 className="mb-2 text-sm font-semibold text-muted">Also streaming on</h2>
               <WhereToWatch links={anime.streamingLinks} />
@@ -133,7 +137,13 @@ export default async function WatchPage({ params }: Props) {
 
         <aside aria-label="Episode list" className="lg:sticky lg:top-24 lg:self-start">
           <h2 className="display mb-4 text-xl lg:mt-12">Episodes</h2>
-          <EpisodeList episodes={episodes} animeId={anime.id} current={number} scroll />
+          <EpisodeList
+            episodes={episodes}
+            animeId={anime.id}
+            current={number}
+            allPlayHere={Boolean(officialPlaylist(anime))}
+            scroll
+          />
         </aside>
       </div>
 
@@ -177,10 +187,10 @@ function NotPlayable({
     body = "This episode is streaming legally there. It opens in a new tab.";
   } else if (anime.streamingLinks.length > 0) {
     heading = "Watch it on a streaming service";
-    body = "rainime can’t play this episode here, but these services carry the show.";
+    body = "These services carry the show. Each opens in a new tab.";
   } else {
     heading = "No stream available";
-    body = "rainime can’t play this episode, and AniList doesn’t list a licensed service for it.";
+    body = "AniList doesn’t list a licensed service for this show yet.";
   }
 
   return (

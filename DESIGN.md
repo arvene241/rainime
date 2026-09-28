@@ -30,7 +30,7 @@ Archivo for everything; JetBrains Mono (`.num`) for episode numbers, dates and c
 - `.btn` + `.btn-primary | .btn-secondary | .btn-ghost | .btn-icon`: 44px minimum. Primary is reserved for play.
 - `.card` / `.card-poster`: 2:3 poster; hover draws a red pencil outline, the image never animates.
 - `.badge`, `.chip`, `.sheet-row`, `.skeleton`, `.frame`.
-- `Spotlight`, `EpisodeList` (exposure sheet, or number grid when episodes have no titles), `WhereToWatch` (licensed services with their AniList icons), `StateMessage` / `ApiDown`.
+- `Spotlight`, `EpisodeList` (exposure sheet, or number grid when episodes have no titles), `WhereToWatch` (licensed services with their AniList icons), `VideoEmbed` (click-to-load official YouTube/Dailymotion player), `StateMessage` / `ApiDown`.
 
 ## Icons
 

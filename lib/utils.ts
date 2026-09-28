@@ -111,3 +111,34 @@ export function airedCount(anime: AnimeSummary): number {
   if (anime.status === "NOT_YET_RELEASED") return 0;
   return anime.totalEpisodes ?? 0;
 }
+
+export type YouTubeRef = { type: "video" | "playlist"; id: string };
+
+/** Recognises YouTube video and playlist URLs. Channel links return null. */
+export function youtubeOf(url?: string | null): YouTubeRef | null {
+  if (!url) return null;
+  let u: URL;
+  try {
+    u = new URL(url);
+  } catch {
+    return null;
+  }
+  const host = u.hostname.replace(/^www\.|^m\./, "");
+  const valid = (id: string | null, re: RegExp) => (id && re.test(id) ? id : null);
+  const VIDEO = /^[\w-]{11}$/;
+  const LIST = /^[\w-]{10,64}$/;
+
+  if (host === "youtu.be") {
+    const id = valid(u.pathname.slice(1), VIDEO);
+    return id ? { type: "video", id } : null;
+  }
+  if (host !== "youtube.com" && host !== "youtube-nocookie.com") return null;
+
+  const v = valid(u.searchParams.get("v"), VIDEO);
+  if (u.pathname === "/watch" && v) return { type: "video", id: v };
+  const embed = u.pathname.match(/^\/(?:embed|shorts|live)\/([\w-]{11})$/);
+  if (embed) return { type: "video", id: embed[1] };
+  const list = valid(u.searchParams.get("list"), LIST);
+  if (list) return { type: "playlist", id: list };
+  return null;
+}

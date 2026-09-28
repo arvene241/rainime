@@ -7,25 +7,18 @@ import type {
   OfficialEpisode,
   Paged,
   RecentEpisode,
-  StreamEpisode,
   StreamingLink,
-  WatchData,
 } from "./types";
-import { airedCount } from "./utils";
+import { airedCount, youtubeOf } from "./utils";
 
 export { airedCount };
 
 /**
- * Show data comes from AniList's public GraphQL API.
- * In-page playback needs a Consumet-compatible stream API that you host
- * yourself: set CONSUMET_API_URL (and optionally CONSUMET_PROVIDER). Without
- * it, the site links each episode to the licensed services AniList lists.
+ * All show data comes from AniList's public GraphQL API. Episodes play in
+ * the site only where AniList links an official upload (YouTube); otherwise
+ * they link to the licensed services AniList lists.
  */
 const ANILIST_URL = process.env.ANILIST_API_URL ?? "https://graphql.anilist.co";
-const STREAM_API_URL = process.env.CONSUMET_API_URL?.replace(/\/+$/, "") || null;
-const STREAM_PROVIDER = process.env.CONSUMET_PROVIDER || null;
-
-export const streamingEnabled = Boolean(STREAM_API_URL);
 
 export type Result<T> = { ok: true; data: T } | { ok: false; error: string; status?: number };
 
@@ -295,82 +288,36 @@ export const getAnimeInfo = (id: string) =>
     })()
   );
 
-/* ------------------------------------------------------------------ */
-/* Stream API (optional, Consumet-compatible)                          */
-/* ------------------------------------------------------------------ */
-
-const withProvider = (url: string) =>
-  STREAM_PROVIDER ? `${url}${url.includes("?") ? "&" : "?"}provider=${encodeURIComponent(STREAM_PROVIDER)}` : url;
-
-async function streamApi<T>(path: string, revalidate: number): Promise<T> {
-  if (!STREAM_API_URL) throw new ApiError("No stream API is configured.");
-  const res = await send(withProvider(`${STREAM_API_URL}${path}`), { next: { revalidate } }, "The stream API");
-  if (!res.ok) throw new ApiError(`The stream API answered with ${res.status}.`, res.status);
-  try {
-    return (await res.json()) as T;
-  } catch {
-    throw new ApiError("The stream API sent a response we could not read.");
-  }
-}
-
-export const getStreamEpisodes = (anilistId: string) =>
-  settle(
-    streamApi<StreamEpisode[] | { episodes?: StreamEpisode[] }>(
-      `/meta/anilist/episodes/${encodeURIComponent(anilistId)}`,
-      HOUR
-    ).then((d) => {
-      const list = Array.isArray(d) ? d : d?.episodes ?? [];
-      return list
-        .filter((e) => e && e.id && Number.isFinite(Number(e.number)))
-        .map((e) => ({ ...e, number: Number(e.number) }));
-    })
-  );
-
-export const getEpisodeSources = (episodeId: string) =>
-  settle(
-    streamApi<WatchData>(`/meta/anilist/watch/${encodeURIComponent(episodeId)}`, 30 * 60).then((d) => {
-      const sources = Array.isArray(d?.sources) ? d.sources.filter((s) => s?.url) : [];
-      if (sources.length === 0) throw new ApiError("No stream was found for this episode.");
-      return {
-        sources,
-        subtitles: Array.isArray(d.subtitles)
-          ? d.subtitles.filter((s) => s?.url && s.lang && !/thumbnails/i.test(s.lang))
-          : [],
-      };
-    })
-  );
-
 /**
- * Merges what AniList knows (aired count, official episode pages) with what
- * the stream API can play into one ordered list.
+ * One entry per aired episode, with AniList's official episode page and,
+ * when that page is an official YouTube upload, the video to embed.
  */
-export function buildEpisodes(anime: AnimeInfo, stream: StreamEpisode[]): Episode[] {
+export function buildEpisodes(anime: AnimeInfo): Episode[] {
   const byNumber = new Map<number, Episode>();
-  const count = Math.max(airedCount(anime), stream.length ? Math.max(...stream.map((e) => e.number)) : 0);
-
-  for (let n = 1; n <= count; n++) byNumber.set(n, { number: n });
+  for (let n = 1; n <= airedCount(anime); n++) byNumber.set(n, { number: n });
 
   for (const e of anime.officialEpisodes) {
-    if (e.number == null) continue;
+    if (e.number == null || e.number < 1) continue;
     const ep = byNumber.get(e.number) ?? { number: e.number };
+    const yt = youtubeOf(e.url);
     byNumber.set(e.number, {
       ...ep,
       title: ep.title ?? (e.title || null),
       image: ep.image ?? e.thumbnail ?? null,
       officialUrl: e.url,
       officialSite: e.site,
+      youtubeId: yt?.type === "video" ? yt.id : null,
     });
   }
 
-  for (const e of stream) {
-    const ep = byNumber.get(e.number) ?? { number: e.number };
-    byNumber.set(e.number, {
-      ...ep,
-      streamId: e.id,
-      title: ep.title ?? (e.title && !/^episode \d+$/i.test(e.title) ? e.title : null),
-      image: ep.image ?? e.image ?? null,
-    });
-  }
+  return Array.from(byNumber.values()).sort((a, b) => a.number - b.number);
+}
 
-  return Array.from(byNumber.values()).filter((e) => e.number > 0).sort((a, b) => a.number - b.number);
+/** An official YouTube playlist for the whole show, if AniList lists one. */
+export function officialPlaylist(anime: AnimeInfo) {
+  for (const link of anime.streamingLinks) {
+    const yt = youtubeOf(link.url);
+    if (yt?.type === "playlist") return { id: yt.id, site: link.site, language: link.language };
+  }
+  return null;
 }

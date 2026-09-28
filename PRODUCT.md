@@ -13,7 +13,7 @@ web
 
 ## Product Purpose
 
-Rainime is an anime front end. It lists recently aired episodes, trending and popular shows, lets people search, read a show's details, pick an episode, and watch it: in the site's own HLS player when a stream API is configured, otherwise on the licensed service AniList lists. Success means a returning fan gets from the home page to a playing episode in as few steps as possible.
+Rainime is an anime front end. It lists recently aired episodes, trending and popular shows, lets people search, read a show's details, pick an episode, and watch it: in the page when AniList links an official YouTube upload, otherwise on the licensed service AniList lists. Success means a returning fan gets from the home page to a playing episode in as few steps as possible.
 
 ## Positioning
 
@@ -21,8 +21,8 @@ A personal, ad-free front end over AniList's public metadata. It is a personal p
 
 ## Operating Context
 
-- Show data comes from AniList GraphQL. In-page playback needs a self-hosted Consumet-compatible API (`CONSUMET_API_URL`); without it, episodes link to licensed services. Every page must degrade gracefully when either API fails.
-- Built with Next.js App Router, Tailwind CSS, Radix primitives, hls.js. Deployed on Vercel (`rainime.vercel.app`).
+- All data comes from AniList GraphQL. The site uses no unofficial stream sources (owner's decision). Every page must degrade gracefully when AniList fails.
+- Built with Next.js App Router, Tailwind CSS, Radix primitives. Deployed on Vercel (`rainime.vercel.app`).
 
 ## Capabilities and Constraints
 
