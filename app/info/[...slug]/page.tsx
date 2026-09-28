@@ -91,14 +91,14 @@ export default async function InfoPage({ params }: Props) {
         />
       </div>
 
-      <div className="container relative -mt-24 grid gap-6 sm:-mt-28 md:grid-cols-[13rem_minmax(0,1fr)] md:gap-10 lg:grid-cols-[15rem_minmax(0,1fr)]">
-        <div className="card-poster frame w-32 shadow-pop sm:w-40 md:w-full">
+      <div className="container relative -mt-24 grid gap-6 sm:-mt-28 md:grid-cols-[13rem_minmax(0,1fr)] md:gap-x-10 md:gap-y-8 lg:grid-cols-[15rem_minmax(0,1fr)]">
+        <div className="card-poster frame w-32 shadow-pop sm:w-40 md:col-start-1 md:row-start-1 md:w-full">
           {anime.image && (
             <Image src={anime.image} alt={`${title} poster`} fill priority sizes="240px" className="object-cover" />
           )}
         </div>
 
-        <div className="min-w-0 md:pt-24">
+        <div className="min-w-0 md:col-start-2 md:row-span-2 md:row-start-1 md:pt-24">
           <h1 className="display text-[2rem] sm:text-4xl lg:text-5xl">{title}</h1>
           {altTitles.length > 0 && <p className="mt-2 text-[0.9375rem] text-muted">{altTitles.join("  ·  ")}</p>}
 
@@ -152,20 +152,25 @@ export default async function InfoPage({ params }: Props) {
             </div>
           )}
 
-          <div className="mt-8 grid gap-8 xl:grid-cols-[minmax(0,1fr)_18rem] xl:gap-12">
+          <div className="mt-8">
             <Synopsis paragraphs={paragraphs} />
-            <dl className="grid grid-cols-2 gap-x-6 gap-y-3 self-start text-sm xl:grid-cols-1">
-              {details
-                .filter(([, v]) => v)
-                .map(([k, v]) => (
-                  <div key={k} className="sheet-row pb-3 last:border-b-0">
-                    <dt className="text-xs text-muted">{k}</dt>
-                    <dd className="mt-0.5 font-medium">{v}</dd>
-                  </div>
-                ))}
-            </dl>
           </div>
         </div>
+
+        {/* Facts sit under the poster on wider screens, after the synopsis on phones. */}
+        <dl className="grid grid-cols-2 gap-x-6 text-sm md:col-start-1 md:row-start-2 md:grid-cols-1 md:self-start">
+          {details
+            .filter(([, v]) => v)
+            .map(([k, v]) => (
+              <div
+                key={k}
+                className="sheet-row flex flex-col gap-0.5 py-2.5 md:flex-row md:items-baseline md:justify-between md:gap-4"
+              >
+                <dt className="text-xs text-muted md:text-[0.8125rem]">{k}</dt>
+                <dd className="font-medium md:text-right">{v}</dd>
+              </div>
+            ))}
+        </dl>
       </div>
 
       <div className="container mt-14 flex flex-col gap-14">
