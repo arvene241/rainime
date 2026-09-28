@@ -1,155 +1,38 @@
-export const Config = {
-  sidebarNav: [
-    {
-      title: "home",
-      href: "/",
-      items: [],
-    },
-    // {
-    //   title: "types",
-    //   items: [
-    //     {
-    //       "title": "tv",
-    //       "href": "/tv",
-    //     },
-    //     {
-    //       "title": "TV_Short",
-    //       "href": "/TV_short",
-    //     },
-    //     {
-    //       "title": "ova",
-    //       "href": "/ova",
-    //     },
-    //     {
-    //       "title": "ona",
-    //       "href": "/ona",
-    //     },
-    //     {
-    //       "title": "movie",
-    //       "href": "/movie",
-    //     },
-    //     {
-    //       "title": "special",
-    //       "href": "/special",
-    //     },
-    //   ]
-    // },
-    {
-      title: "updated",
-      href: "/recently-updated",
-      items: [],
-    },
-    {
-      title: "trending",
-      href: "/trending",
-      items: [],
-    },
-    // {
-    //   title: "random",
-    //   href: "/random",
-    //   items: [],
-    // },
-    {
-      title: "popular",
-      href: "/popular",
-      items: [],
-    },
-    // {
-    //   title: "ongoing",
-    //   href: "/ongoing",
-    //   items: [],
-    // },
-    // {
-    //   title: "genres",
-    //   items: [
-    //     {
-    //       "title": "action",
-    //       "href": "/genre/action",
-    //     },
-    //     {
-    //       "title": "adventure",
-    //       "href": "/genre/adventure",
-    //     },
-    //     {
-    //       "title": "cars",
-    //       "href": "/genre/cars",
-    //     },
-    //     {
-    //       "title": "comedy",
-    //       "href": "/genre/comedy",
-    //     },
-    //     {
-    //       "title": "cars",
-    //       "href": "/genre/cars",
-    //     },
-    //     {
-    //       "title": "drama",
-    //       "href": "/genre/drama",
-    //     },
-    //     {
-    //       "title": "fantasy",
-    //       "href": "/genre/fantasy",
-    //     },
-    //     {
-    //       "title": "horror",
-    //       "href": "/genre/horror",
-    //     },
-    //     {
-    //       "title": "Mahou Shoujo",
-    //       "href": "/genre/mahou-shoujo",
-    //     },
-    //     {
-    //       "title": "Mecha",
-    //       "href": "/genre/mecha",
-    //     },
-    //     {
-    //       "title": "Music",
-    //       "href": "/genre/music",
-    //     },
-    //     {
-    //       "title": "Mystery",
-    //       "href": "/genre/mystery",
-    //     },
-    //     {
-    //       "title": "Psychological",
-    //       "href": "/genre/psychological",
-    //     },
-    //     {
-    //       "title": "Romance",
-    //       "href": "/genre/romance",
-    //     },
-    //     {
-    //       "title": "Sci-Fi",
-    //       "href": "/genre/sci-fi",
-    //     },
-    //     {
-    //       "title": "Slice of Life",
-    //       "href": "/genre/slice-of-life",
-    //     },
-    //     {
-    //       "title": "Sports",
-    //       "href": "/genre/sports",
-    //     },
-    //     {
-    //       "title": "Supernatural",
-    //       "href": "/genre/supernatural",
-    //     },
-    //     {
-    //       "title": "Thriller",
-    //       "href": "/genre/thriller",
-    //     },
-    //   ]
-    // },
-  ],
-}
-
 export const siteConfig = {
   name: "rainime",
-  url: "rainime.vercel.app",
-  ogImage: "og.jpg",
+  url: "https://rainime.vercel.app",
   description:
-    "Watch Anime for free",
+    "Watch the newest anime episodes, trending shows, and all-time favourites, subbed and dubbed.",
   links: {
     github: "https://github.com/arvene241/rainime",
   },
-}
+};
+
+export const mainNav = [
+  { title: "New episodes", href: "/recently-updated", tone: "var(--tone-1)" },
+  { title: "Trending", href: "/trending", tone: "var(--tone-2)" },
+  { title: "Popular", href: "/popular", tone: "var(--tone-3)" },
+] as const;
+
+export const designs = [
+  {
+    id: "lightbox",
+    name: "Lightbox",
+    blurb: "Animator's light table. Dark graphite, red pencil.",
+  },
+  {
+    id: "onair",
+    name: "On Air",
+    blurb: "Broadcast programme guide. Deep navy, data-key colours.",
+  },
+  {
+    id: "weekly",
+    name: "Weekly",
+    blurb: "Manga magazine. Ink lines, coloured newsprint.",
+  },
+] as const;
+
+export type DesignId = (typeof designs)[number]["id"];
+
+/** Change this to ship a different direction by default. */
+export const DEFAULT_DESIGN: DesignId = "lightbox";

@@ -1,59 +1,25 @@
-import AnimeCard from "@/components/AnimeCard";
-import Pagination from "@/components/Pagination";
-import Popular from "@/components/PopularAnime";
-import { PopularAnime } from "@/lib/types";
+import type { Metadata } from "next";
+import BrowsePage from "@/components/BrowsePage";
+import { getPopular } from "@/lib/api";
+import { pageParam } from "@/lib/utils";
 
-const getData = async ({ url }: { url: string }) => {
-  const res = await fetch(url);
-  const data = await res.json();
+export const metadata: Metadata = { title: "Popular" };
 
-  // Recommendation: handle errors
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error("Failed to fetch data");
-  }
+type Props = { searchParams: { [key: string]: string | string[] | undefined } };
 
-  return data;
-};
-
-const Search = async ({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) => {
-  const page = searchParams.page ? Number(searchParams.page) : 1;
-
-  const url = "https://consumet-mocha.vercel.app/meta/anilist/popular";
-
-  const data = await getData({
-    url: `${url}?page=${page}&perPage=40`,
-  });
-  const results: PopularAnime[] = data.results;
+export default async function Popular({ searchParams }: Props) {
+  const page = pageParam(searchParams.page);
+  const result = await getPopular(page, 30);
 
   return (
-    <section className="container w-full mt-8">
-      <div className="w-full flex flex-col lg:flex-row gap-12">
-        <div className="w-full max-w-[990px]">
-          <h1 className="font-bold text-xl pb-4">Popular Anime</h1>
-          <div className="flex flex-wrap gap-[14px]">
-            {results.map((result) => (
-              <AnimeCard anime={result} key={result.id} />
-            ))}
-          </div>
-          {data.hasNextPage || page > 1 ? (
-            <Pagination
-              hasPrevPage={page ? page > 1 : false}
-              hasNextPage={data.hasNextPage}
-              route="popular"
-            />
-          ) : (
-            <></>
-          )}
-        </div>
-        <Popular />
-      </div>
-    </section>
+    <BrowsePage
+      kind="show"
+      title="Most popular"
+      tone="var(--tone-3)"
+      page={page}
+      result={result}
+      empty="The popular list is empty"
+      hrefFor={(p) => `/popular?page=${p}`}
+    />
   );
-};
-
-export default Search;
+}

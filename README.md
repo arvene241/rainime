@@ -1,34 +1,36 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# rainime
 
-## Getting Started
+A free, ad-free anime streaming front end built with Next.js (App Router), Tailwind CSS, Radix primitives and hls.js. It lists new episodes, trending and popular shows, and offers search, show pages and an in-page HLS player.
 
-First, run the development server:
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### API
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+All data comes from a [Consumet](https://github.com/consumet/api.consumet.org) instance (`/meta/anilist/*` routes). Public instances go offline often, so the base URL is configurable:
 
-## Learn More
+```bash
+# .env.local
+CONSUMET_API_URL=https://your-consumet-instance.example.com
+```
 
-To learn more about Next.js, take a look at the following resources:
+The default is `https://consumet-mocha.vercel.app`. When the API is down, pages show an explanation instead of crashing.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Designs
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+The site ships three switchable design directions: **Lightbox** (default), **On Air** and **Weekly**. Visitors switch with the palette button in the header. To change the default, edit `DEFAULT_DESIGN` in `lib/constants/index.ts`. See [DESIGN.md](./DESIGN.md) for the tokens and rules.
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+| Command | Purpose |
+|---|---|
+| `npm run dev` | Development server |
+| `npm run build` | Production build (type-checks and lints) |
+| `npm start` | Serve the production build |
+| `npm run lint` | ESLint |

@@ -1,41 +1,34 @@
-"use client"; // Error components must be Client Components
+"use client";
 
-import { Button } from "@/components/ui/button";
-import { ArrowLeftCircle } from "lucide-react";
-import Link from "next/link";
 import { useEffect } from "react";
+import Link from "next/link";
 
 export default function Error({
   error,
   reset,
 }: {
-  error: Error;
+  error: Error & { digest?: string };
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
     console.error(error);
   }, [error]);
 
   return (
-    <section className="w-full h-[calc(100vh-56px)] flex flex-col items-center justify-center gap-8 text-center">
-      <h1 className="text-3xl font-semibold">Something went wrong!</h1>
-      <div className="flex gap-4">
-        <Button asChild>
-          <Link href="/">
-            <ArrowLeftCircle className="w-4 h-4 mr-2" />
-            Back to Homepage
-          </Link>
-        </Button>
-        <Button
-          onClick={
-            // Attempt to recover by trying to re-render the segment
-            () => reset()
-          }
-        >
+    <div className="container flex min-h-[60svh] flex-col items-start justify-center gap-5 py-16">
+      <h1 className="display max-w-2xl text-4xl md:text-5xl">Something broke on our side</h1>
+      <p className="max-w-prose text-muted">
+        This page hit an unexpected error. Trying again usually fixes it; if it keeps happening,
+        the anime API may be down.
+      </p>
+      <div className="flex flex-wrap gap-2">
+        <button type="button" onClick={() => reset()} className="btn btn-primary">
           Try again
-        </Button>
+        </button>
+        <Link href="/" className="btn btn-secondary">
+          Go home
+        </Link>
       </div>
-    </section>
+    </div>
   );
 }

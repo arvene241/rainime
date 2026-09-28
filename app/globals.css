@@ -1,84 +1,535 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
+/*
+ * Three switchable design directions share one component structure.
+ * Each sets the same tokens; components only ever read tokens.
+ *   lightbox — animator's light table (default, dark)
+ *   onair    — broadcast programme guide (dark)
+ *   weekly   — weekly manga magazine (light)
+ */
 @layer base {
-  :root {
-    --background: 0 0% 100%;  /* white */
-    --foreground: 240 10% 3.9%; /* black */
+  :root,
+  [data-design="lightbox"] {
+    color-scheme: dark;
+    --bg: oklch(0.17 0.012 255);
+    --surface: oklch(0.21 0.014 255);
+    --surface-2: oklch(0.255 0.016 255);
+    --ink: oklch(0.95 0.008 250);
+    --ink-muted: oklch(0.74 0.015 250);
+    --line: oklch(0.31 0.016 255);
+    --line-strong: oklch(0.4 0.018 255);
+    --accent: oklch(0.7 0.18 32);
+    --accent-hover: oklch(0.75 0.17 32);
+    --on-accent: oklch(0.18 0.03 32);
+    --accent-2: oklch(0.76 0.11 240);
+    --on-accent-2: oklch(0.18 0.03 250);
+    --tone-1: var(--accent-2);
+    --tone-2: var(--accent);
+    --tone-3: var(--accent-2);
+    --tone-4: var(--accent);
+    --scrim: oklch(0.12 0.012 255);
 
-    --muted: 240 4.8% 95.9%; /* flash white */
-    --muted-foreground: 240 3.8% 46.1%; /* gray */
+    --font-ui: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+    --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+    --font-num: var(--font-mono), ui-monospace, monospace;
+    --display-weight: 800;
+    --display-stretch: 100%;
+    --display-case: none;
+    --display-tracking: -0.025em;
+    --label-case: none;
+    --label-tracking: 0;
 
-    --popover: 0 0% 100%; /* white */
-    --popover-foreground: 240 10% 3.9%; /* black */
-
-    --card: 0 0% 100%; /* white */
-    --card-foreground: 240 10% 3.9%; /* black */
-
-    --border: 240 5.9% 90%; /* platinum */
-    --input: 240 5.9% 90%; /* platinum */
-
-    --primary: 240 5.9% 10%; /* black */
-    --primary-foreground: 0 0% 98%; /* white */
-
-    --secondary: 240 4.8% 95.9%; /* flash white */
-    --secondary-foreground: 240 5.9% 10%; /* black */
-
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-
-    --ring: 240 5% 64.9%;
-
-    --radius: 0.5rem;
+    --radius: 3px;
+    --radius-card: 3px;
+    --radius-control: 3px;
+    --bw: 1px;
+    --shadow-pop: 0 12px 32px -8px oklch(0.05 0.01 255 / 0.6);
   }
 
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+  [data-design="onair"] {
+    color-scheme: dark;
+    --bg: oklch(0.2 0.04 262);
+    --surface: oklch(0.245 0.045 262);
+    --surface-2: oklch(0.295 0.05 262);
+    --ink: oklch(0.97 0.01 250);
+    --ink-muted: oklch(0.8 0.035 255);
+    --line: oklch(0.34 0.045 262);
+    --line-strong: oklch(0.44 0.05 262);
+    --accent: oklch(0.87 0.16 95);
+    --accent-hover: oklch(0.91 0.15 95);
+    --on-accent: oklch(0.2 0.04 262);
+    --accent-2: oklch(0.72 0.14 245);
+    --on-accent-2: oklch(0.17 0.04 262);
+    --tone-1: oklch(0.68 0.15 250);
+    --tone-2: oklch(0.66 0.2 25);
+    --tone-3: oklch(0.74 0.16 150);
+    --tone-4: oklch(0.87 0.16 95);
+    --scrim: oklch(0.14 0.04 262);
 
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --font-ui: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+    --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+    --font-num: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+    --display-weight: 700;
+    --display-stretch: 72%;
+    --display-case: uppercase;
+    --display-tracking: 0.01em;
+    --label-case: uppercase;
+    --label-tracking: 0.06em;
 
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 85.7% 97.3%;
-
-    --ring: 240 3.7% 15.9%;
+    --radius: 10px;
+    --radius-card: 10px;
+    --radius-control: 999px;
+    --bw: 1px;
+    --shadow-pop: 0 16px 40px -12px oklch(0.08 0.04 262 / 0.7);
   }
-}
- 
-@layer base {
+
+  [data-design="weekly"] {
+    color-scheme: light;
+    --bg: oklch(0.975 0.003 250);
+    --surface: oklch(1 0 0);
+    --surface-2: oklch(0.94 0.004 250);
+    --ink: oklch(0.17 0.012 270);
+    --ink-muted: oklch(0.4 0.012 270);
+    --line: oklch(0.17 0.012 270);
+    --line-strong: oklch(0.17 0.012 270);
+    --accent: oklch(0.56 0.21 28);
+    --accent-hover: oklch(0.5 0.2 28);
+    --on-accent: oklch(0.99 0 0);
+    --accent-2: oklch(0.17 0.012 270);
+    --on-accent-2: oklch(0.99 0 0);
+    --tone-1: oklch(0.91 0.055 5);
+    --tone-2: oklch(0.945 0.085 100);
+    --tone-3: oklch(0.93 0.055 165);
+    --tone-4: oklch(0.915 0.045 240);
+    --scrim: oklch(0.17 0.012 270);
+
+    --font-ui: var(--font-zen), ui-sans-serif, system-ui, sans-serif;
+    --font-display: var(--font-dela), var(--font-zen), ui-sans-serif, sans-serif;
+    --font-num: var(--font-dela), var(--font-zen), ui-sans-serif, sans-serif;
+    --display-weight: 400;
+    --display-stretch: 100%;
+    --display-case: none;
+    --display-tracking: -0.01em;
+    --label-case: none;
+    --label-tracking: 0.02em;
+
+    --radius: 0px;
+    --radius-card: 0px;
+    --radius-control: 0px;
+    --bw: 2.5px;
+    --shadow-pop: 0 10px 24px -10px oklch(0.17 0.012 270 / 0.35);
+  }
+
   * {
-    @apply border-border;
+    border-color: var(--line);
   }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-color: var(--line-strong) var(--bg);
+  }
+
   body {
-    @apply bg-background text-foreground;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    font-feature-settings: "ss01" on;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  input {
+    caret-color: var(--accent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-2);
+    outline-offset: 2px;
+  }
+
+  [data-design="weekly"] :focus-visible {
+    outline-color: var(--accent);
+  }
+
+  a {
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
   }
 }
 
-@media (max-width: 640px) {
-  .container {
-    @apply px-4;
+@layer components {
+  .display {
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-stretch: var(--display-stretch);
+    text-transform: var(--display-case);
+    letter-spacing: var(--display-tracking);
+    line-height: 1.05;
+    text-wrap: balance;
   }
+
+  .label {
+    text-transform: var(--label-case);
+    letter-spacing: var(--label-tracking);
+  }
+
+  .num {
+    font-family: var(--font-num);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .frame {
+    border: var(--bw) solid var(--line);
+    border-radius: var(--radius-card);
+  }
+
+  [data-design="weekly"] .section-tone {
+    background: var(--tone);
+    border: var(--bw) solid var(--line);
+    padding: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    [data-design="weekly"] .section-tone {
+      padding: 1.75rem;
+    }
+  }
+
+  /* Section heading key: pencil tick, remote-control data key, or ink tab. */
+  .heading-key {
+    display: inline-block;
+    flex: none;
+    width: 0.625rem;
+    height: 0.625rem;
+    background: var(--tone);
+    border-radius: 2px;
+  }
+  [data-design="lightbox"] .heading-key {
+    width: 1rem;
+    height: 3px;
+    border-radius: 0;
+  }
+  [data-design="weekly"] .heading-key {
+    display: none;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1.125rem;
+    border-radius: var(--radius-control);
+    font-weight: 650;
+    font-size: 0.9375rem;
+    line-height: 1;
+    white-space: nowrap;
+    transition:
+      background-color 160ms cubic-bezier(0.22, 1, 0.36, 1),
+      color 160ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 160ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
+    text-transform: var(--label-case);
+    letter-spacing: var(--label-tracking);
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+  .btn[aria-disabled="true"],
+  .btn:disabled {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  .btn-primary:hover {
+    background: var(--accent-hover);
+  }
+  .btn-secondary {
+    background: var(--surface-2);
+    color: var(--ink);
+    border: var(--bw) solid var(--line-strong);
+  }
+  .btn-secondary:hover {
+    border-color: var(--ink-muted);
+  }
+  [data-design="weekly"] .btn-secondary {
+    background: var(--surface);
+  }
+  [data-design="weekly"] .btn-secondary:hover {
+    background: var(--ink);
+    color: var(--surface);
+  }
+  [data-design="weekly"] .btn-primary {
+    border: var(--bw) solid var(--line);
+  }
+  .btn-ghost {
+    color: var(--ink);
+  }
+  .btn-ghost:hover {
+    background: var(--surface-2);
+  }
+  .btn-icon {
+    min-height: 2.75rem;
+    width: 2.75rem;
+    padding: 0;
+  }
+
+  /* Poster card */
+  .card-poster {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border-radius: var(--radius-card);
+    background: var(--surface-2);
+    outline: var(--bw) solid transparent;
+    outline-offset: 0;
+    transition: outline-color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  [data-design="weekly"] .card-poster {
+    outline-color: var(--line);
+    outline-offset: calc(var(--bw) * -1);
+  }
+  .card:hover .card-poster,
+  .card:focus-visible .card-poster {
+    outline-color: var(--accent);
+    outline-offset: calc(var(--bw) * -1);
+  }
+  [data-design="lightbox"] .card:hover .card-poster,
+  [data-design="lightbox"] .card:focus-visible .card-poster {
+    outline-width: 2px;
+    outline-offset: -2px;
+  }
+  .card:hover .card-title {
+    color: var(--accent);
+  }
+  [data-design="lightbox"] .card:hover .card-title,
+  [data-design="onair"] .card:hover .card-title {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.4rem;
+    border-radius: var(--radius);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    background: var(--scrim);
+    color: var(--ink);
+  }
+  [data-design="weekly"] .badge {
+    background: var(--ink);
+    color: var(--surface);
+  }
+  .badge-accent {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.75rem;
+    padding: 0 0.625rem;
+    border-radius: var(--radius-control);
+    border: var(--bw) solid var(--line-strong);
+    font-size: 0.8125rem;
+    color: var(--ink);
+    text-transform: var(--label-case);
+    letter-spacing: var(--label-tracking);
+  }
+  [data-design="onair"] .chip {
+    font-size: 0.75rem;
+  }
+
+  /* Exposure-sheet ruling for the episode list. */
+  .sheet-row {
+    border-bottom: 1px solid var(--line);
+  }
+  [data-design="weekly"] .sheet-row {
+    border-bottom-width: 1.5px;
+  }
+
+  .scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+}
+
+/* Spotlight registration wipe: the new cel slides in over the old one. */
+@keyframes cel-in {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+.cel-enter {
+  animation: cel-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise-in {
+  animation: rise-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes shimmer {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.skeleton {
+  background: var(--surface-2);
+  border-radius: var(--radius-card);
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cel-enter,
+  .rise-in,
+  .skeleton {
+    animation: none;
+  }
+  .btn,
+  .card-poster {
+    transition: none;
+  }
+}
+
+/* Spotlight ------------------------------------------------------------- */
+.spot-stage {
+  aspect-ratio: 4 / 5;
+  max-height: 72svh;
+  width: 100%;
+  border-radius: var(--radius-card);
+}
+@media (min-width: 640px) {
+  .spot-stage {
+    aspect-ratio: 16 / 9;
+  }
+}
+@media (min-width: 768px) {
+  .spot-stage {
+    aspect-ratio: auto;
+    height: clamp(380px, 38vw, 540px);
+  }
+}
+.spot-scrim {
+  background: linear-gradient(
+    to top,
+    color-mix(in oklch, var(--scrim) 96%, transparent) 0%,
+    color-mix(in oklch, var(--scrim) 82%, transparent) 42%,
+    transparent 78%
+  );
+}
+@media (min-width: 768px) {
+  .spot-scrim {
+    background:
+      linear-gradient(
+        to right,
+        color-mix(in oklch, var(--scrim) 92%, transparent) 0%,
+        color-mix(in oklch, var(--scrim) 55%, transparent) 42%,
+        transparent 68%
+      ),
+      linear-gradient(to top, color-mix(in oklch, var(--scrim) 70%, transparent), transparent 45%);
+  }
+}
+.spot-plate {
+  color: oklch(0.97 0.005 250);
+}
+.spot-muted {
+  color: oklch(0.86 0.012 250);
+}
+.spot-secondary {
+  background: color-mix(in oklch, var(--scrim) 55%, transparent);
+  border-color: oklch(1 0 0 / 0.35);
+  color: oklch(0.97 0.005 250);
+}
+.spot-secondary:hover {
+  border-color: oklch(1 0 0 / 0.7);
+}
+.spot-cel {
+  border: var(--bw) solid transparent;
+}
+.spot-cel.is-active {
+  background: var(--surface-2);
+  border-color: var(--accent-2);
+}
+[data-design="onair"] .spot-cel.is-active {
+  background: var(--accent-2);
+  border-color: var(--accent-2);
+  color: var(--on-accent-2);
+}
+[data-design="onair"] .spot-cel.is-active .text-muted {
+  color: var(--on-accent-2);
+}
+
+/* Magazine: the caption sits on a white panel with a screentone band. */
+[data-design="weekly"] .spot-stage {
+  border: var(--bw) solid var(--line);
+}
+[data-design="weekly"] .spot-scrim {
+  display: none;
+}
+[data-design="weekly"] .spot-plate {
+  color: var(--ink);
+  background: var(--surface);
+  border-top: var(--bw) solid var(--line);
+}
+@media (min-width: 768px) {
+  [data-design="weekly"] .spot-plate {
+    inset: auto auto 1.5rem 1.5rem;
+    border: var(--bw) solid var(--line);
+    padding: 1.75rem 2rem;
+    max-width: 36rem;
+  }
+}
+[data-design="weekly"] .spot-muted {
+  color: var(--ink-muted);
+}
+[data-design="weekly"] .spot-secondary {
+  background: var(--surface);
+  border-color: var(--line);
+  color: var(--ink);
+}
+[data-design="weekly"] .spot-secondary:hover {
+  background: var(--ink);
+  color: var(--surface);
+}
+[data-design="weekly"] .spot-cel.is-active {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--ink);
+}
+[data-design="weekly"] .spot-cel.is-active .text-muted {
+  color: var(--surface);
 }

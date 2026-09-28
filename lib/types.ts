@@ -1,118 +1,83 @@
-interface Title {
-  native: string;
-  romaji: string;
-  english: string;
-  userPreferred: string;
+export interface Title {
+  romaji?: string | null;
+  english?: string | null;
+  native?: string | null;
+  userPreferred?: string | null;
 }
 
-export interface Datee {
-  year: number;
-  month: number;
-  day: number;
+export interface FuzzyDate {
+  year?: number | null;
+  month?: number | null;
+  day?: number | null;
 }
 
-export interface Sources {
-  url: string;
-  isM3U8: boolean;
-  quality: string;
-}
-
-export interface Recommendations {
-  id: string;
-  title: Title;
-  status: string;
-  episodes: number;
-  image: string;
-  cover: string;
-  rating: number;
-  type: string;
-}
-
-export interface Episodes {
-  id: string;
-  title: string;
-  description: string;
-  number: number;
-  image: string;
-  airdate: string;
-}
-
-export interface AnimeResult {
-  id: string;
-  title: Title;
-  image: string;
-  type: string;
-  rating: number;
-  releaseDate: string;
-  currentEpisodeCount: number;
-  totalEpisodes: number;
-}
-
-export interface AnimeTrending {
-  id: string;
-  title: Title;
-  description: string;
-  cover: string;
-  image: string;
-  genres: string[];
-  type: string;
-  rating: number;
-  releaseDate: string;
-}
-
-export interface RecentAnime {
-  id: string;
-  title: Title;
-  image: string;
-  genres: string[];
-  type: string;
-  rating: number;
-  episodeId: string;
-  episodeNumber: number;
-  episodeTitle: string;
-}
-
-export interface AnimeInfo {
-  id: string;
-  title: Title;
-  image: string;
-  popularity: number;
-  cover: string;
-  description: string;
-  status: string;
-  genres: string[];
-  studios: string[];
-  totalEpisodes: number;
-  currentEpisodes: number;
-  type: string;
-  rating: number;
-  subOrDub: string;
-  recommendations: Recommendations[];
-  episodes: Episodes[];
-  startDate: Datee;
-  endDate: Datee;
-  season: string
-  releaseDate: string;
-  duration: number;
-}
-
-export interface PopularAnime {
-  id: string;
-  title: Title;
-  image: string;
-  description: string;
-  status: string;
-  cover: string;
-  rating: number;
-  genres: string[];
-  totalEpisodes: number;
-  type: string;
-}
-
-export interface AnimeData {
+export interface Paged<T> {
   currentPage: number;
   hasNextPage: boolean;
-  totalPages: number;
-  totalResults: number;
-  results: [];
+  totalPages?: number;
+  totalResults?: number;
+  results: T[];
+}
+
+/** The fields every list endpoint (trending, popular, search, recommendations) shares. */
+export interface AnimeSummary {
+  id: string;
+  title: Title;
+  image?: string;
+  cover?: string;
+  description?: string;
+  status?: string;
+  rating?: number | null;
+  genres?: string[];
+  type?: string;
+  releaseDate?: string | number | null;
+  totalEpisodes?: number | null;
+  currentEpisode?: number | null;
+  currentEpisodeCount?: number | null;
+  episodes?: number | null;
+  color?: string | null;
+}
+
+export interface RecentEpisode {
+  id: string;
+  title: Title;
+  image?: string;
+  rating?: number | null;
+  genres?: string[];
+  type?: string;
+  episodeId: string;
+  episodeNumber: number;
+  episodeTitle?: string | null;
+}
+
+export interface Episode {
+  id: string;
+  number: number;
+  title?: string | null;
+  description?: string | null;
+  image?: string | null;
+  airDate?: string | null;
+}
+
+export interface AnimeInfo extends Omit<AnimeSummary, "episodes"> {
+  season?: string | null;
+  duration?: number | null;
+  popularity?: number | null;
+  subOrDub?: string | null;
+  studios?: string[];
+  startDate?: FuzzyDate;
+  endDate?: FuzzyDate;
+  recommendations?: AnimeSummary[];
+  episodes?: Episode[];
+}
+
+export interface Source {
+  url: string;
+  isM3U8?: boolean;
+  quality?: string;
+}
+
+export interface WatchData {
+  headers?: Record<string, string>;
+  sources: Source[];
 }
