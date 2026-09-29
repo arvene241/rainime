@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 const format = (unixSeconds: number, timeZone?: string) =>
   new Intl.DateTimeFormat("en", {
@@ -13,10 +13,15 @@ const format = (unixSeconds: number, timeZone?: string) =>
     timeZoneName: "short",
   }).format(new Date(unixSeconds * 1000));
 
+const noop = () => () => {};
+
 /** Server renders UTC; the browser swaps in the viewer's own time zone. */
 const LocalTime = ({ unixSeconds }: { unixSeconds: number }) => {
-  const [text, setText] = useState(() => format(unixSeconds, "UTC"));
-  useEffect(() => setText(format(unixSeconds)), [unixSeconds]);
+  const text = useSyncExternalStore(
+    noop,
+    () => format(unixSeconds),
+    () => format(unixSeconds, "UTC")
+  );
   return <time dateTime={new Date(unixSeconds * 1000).toISOString()}>{text}</time>;
 };
 

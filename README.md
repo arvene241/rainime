@@ -24,7 +24,7 @@ No API keys or environment variables are needed.
 | Command | Purpose |
 |---|---|
 | `npm run dev` | Development server |
-| `npm run build` | Production build (type-checks and lints) |
+| `npm run build` | Production build (type-checks; run lint separately) |
 | `npm start` | Serve the production build |
 | `npm run lint` | ESLint |
 

@@ -15,12 +15,13 @@ import WhereToWatch from "@/components/WhereToWatch";
 import { buildEpisodes, getAnimeInfo, isEmbeddable, officialPlaylist } from "@/lib/api";
 import { cleanDescription, formatDate, formatScore, titleCase, titleOf, watchHref } from "@/lib/utils";
 
-type Props = { params: { slug: string[] } };
+type Props = { params: Promise<{ slug: string[] }> };
 
 /** Accepts both /info/{id} and the old /info/{title}/{id} links. */
 const idOf = (slug: string[]) => decodeURIComponent(slug[slug.length - 1] ?? "");
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const res = await getAnimeInfo(idOf(params.slug));
   if (!res.ok) return { title: "Anime" };
   const title = titleOf(res.data.title);
@@ -32,7 +33,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function InfoPage({ params }: Props) {
+export default async function InfoPage(props: Props) {
+  const params = await props.params;
   const id = idOf(params.slug);
   if (!id) notFound();
 

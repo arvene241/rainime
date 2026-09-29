@@ -5,9 +5,10 @@ import { pageParam } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Trending" };
 
-type Props = { searchParams: { [key: string]: string | string[] | undefined } };
+type Props = { searchParams: Promise<{ [key: string]: string | string[] | undefined }> };
 
-export default async function Trending({ searchParams }: Props) {
+export default async function Trending(props: Props) {
+  const searchParams = await props.searchParams;
   const page = pageParam(searchParams.page);
   const result = await getTrending(page, 30);
 

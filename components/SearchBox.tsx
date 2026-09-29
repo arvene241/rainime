@@ -17,31 +17,31 @@ const SearchBox = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<AnimeSummary[]>([]);
-  const [status, setStatus] = useState<Status>("idle");
+  const [fetched, setFetched] = useState<AnimeSummary[]>([]);
+  const [fetchStatus, setFetchStatus] = useState<Status>("idle");
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
   const [expanded, setExpanded] = useState(false); // small screens only
+  const [lastPath, setLastPath] = useState(pathname);
 
-  // Reset when the route changes.
-  useEffect(() => {
+  // Reset when the route changes (adjusting state during render, not in an effect).
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
     setOpen(false);
     setExpanded(false);
     setQuery("");
-    setResults([]);
-    setStatus("idle");
-  }, [pathname]);
+  }
+
+  // Queries under two characters show nothing and never hit the API.
+  const tooShort = query.trim().length < 2;
+  const results = tooShort ? [] : fetched;
+  const status: Status = tooShort ? "idle" : fetchStatus;
 
   // Debounced, cancellable suggestions.
   useEffect(() => {
     const q = query.trim();
-    if (q.length < 2) {
-      setResults([]);
-      setStatus("idle");
-      return;
-    }
+    if (q.length < 2) return;
     const controller = new AbortController();
-    setStatus("loading");
     const timer = setTimeout(async () => {
       try {
         const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`, {
@@ -49,11 +49,11 @@ const SearchBox = () => {
         });
         if (!res.ok) throw new Error(String(res.status));
         const data: { results: AnimeSummary[] } = await res.json();
-        setResults(data.results.slice(0, 6));
+        setFetched(data.results.slice(0, 6));
         setActive(-1);
-        setStatus("done");
+        setFetchStatus("done");
       } catch (err) {
-        if ((err as Error).name !== "AbortError") setStatus("error");
+        if ((err as Error).name !== "AbortError") setFetchStatus("error");
       }
     }, 250);
     return () => {
@@ -144,6 +144,7 @@ const SearchBox = () => {
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
+            setFetchStatus("loading");
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}

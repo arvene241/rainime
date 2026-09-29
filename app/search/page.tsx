@@ -4,17 +4,19 @@ import StateMessage from "@/components/StateMessage";
 import { searchAnime } from "@/lib/api";
 import { pageParam } from "@/lib/utils";
 
-type Props = { searchParams: { [key: string]: string | string[] | undefined } };
+type Props = { searchParams: Promise<{ [key: string]: string | string[] | undefined }> };
 
 const keywordOf = (value: string | string[] | undefined) =>
   (Array.isArray(value) ? value[0] : value)?.trim() ?? "";
 
-export function generateMetadata({ searchParams }: Props): Metadata {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const keyword = keywordOf(searchParams.keyword);
   return { title: keyword ? `“${keyword}”` : "Search", robots: { index: false } };
 }
 
-export default async function Search({ searchParams }: Props) {
+export default async function Search(props: Props) {
+  const searchParams = await props.searchParams;
   const keyword = keywordOf(searchParams.keyword);
   const page = pageParam(searchParams.page);
 

@@ -14,14 +14,15 @@ import { airedCount, buildEpisodes, getAnimeInfo, isEmbeddable, officialPlaylist
 import type { AnimeInfo, Episode } from "@/lib/types";
 import { animeHref, titleOf, watchHref } from "@/lib/utils";
 
-type Props = { params: { id: string; ep: string } };
+type Props = { params: Promise<{ id: string; ep: string }> };
 
 const epOf = (value: string) => {
   const n = Number(value);
   return Number.isInteger(n) && n > 0 ? n : null;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const info = await getAnimeInfo(params.id);
   if (!info.ok) return { title: "Watch" };
   return {
@@ -30,7 +31,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function WatchPage({ params }: Props) {
+export default async function WatchPage(props: Props) {
+  const params = await props.params;
   const number = epOf(params.ep);
   if (!number) notFound();
 
