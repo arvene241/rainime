@@ -27,14 +27,12 @@ const NavLinks = ({
                 href={item.href}
                 onClick={onNavigate}
                 aria-current={active ? "page" : undefined}
-                style={{ "--tone": item.tone } as React.CSSProperties}
                 className={cn(
-                  "flex items-center gap-2.5 rounded-control px-3 text-[0.9375rem] font-medium text-muted transition-colors hover:text-ink",
+                  "flex items-center rounded-control px-3 text-[0.9375rem] font-medium text-muted transition-colors hover:text-ink",
                   vertical ? "min-h-12 border-b px-1 text-lg" : "min-h-10",
                   active && "text-ink"
                 )}
               >
-                <span className="heading-key" />
                 <span
                   className={cn(
                     active &&

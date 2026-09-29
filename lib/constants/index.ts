@@ -9,7 +9,7 @@ export const siteConfig = {
 };
 
 export const mainNav = [
-  { title: "New episodes", href: "/recently-updated", tone: "var(--tone-1)" },
-  { title: "Trending", href: "/trending", tone: "var(--tone-2)" },
-  { title: "Popular", href: "/popular", tone: "var(--tone-1)" },
+  { title: "New episodes", href: "/recently-updated" },
+  { title: "Trending", href: "/trending" },
+  { title: "Popular", href: "/popular" },
 ] as const;
