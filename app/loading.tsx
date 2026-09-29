@@ -1,24 +1,15 @@
-import LoadingSkeleton from "@/components/CardLoading";
-import { Skeleton } from "@/components/ui/skeleton";
+import { GridSkeleton, HeadingSkeleton, Loading } from "@/components/Skeletons";
 
-const Loading = () => {
+export default function HomeLoading() {
   return (
-    <section className="container flex flex-col gap-12">
-      <Skeleton className="w-full h-[290px] md:h-[400px]" />
-      <div className="w-full flex flex-col lg:flex-row gap-12">
-        <div className="w-full max-w-[990px] relative">
-          <div className="flex flex-wrap w-full gap-[14px]">
-            {Array(15)
-              .fill(null)
-              .map((_, index) => (
-                <LoadingSkeleton key={index} />
-              ))}
-          </div>
+    <Loading>
+      <div className="container flex flex-col gap-14 pt-4 md:pt-6">
+        <div className="skeleton spot-stage" />
+        <div>
+          <HeadingSkeleton />
+          <GridSkeleton count={10} />
         </div>
-        <Skeleton className="w-full max-w-[298px] h-[500px] pt-2 pb-5 rounded-lg" />
       </div>
-    </section>
+    </Loading>
   );
-};
-
-export default Loading;
+}

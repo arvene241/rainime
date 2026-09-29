@@ -1,76 +1,42 @@
-"use client";
-
-import { useRouter, useSearchParams } from "next/navigation";
-import { Button } from "./ui/button";
+import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "@/components/icons";
 
 interface PaginationProps {
-  hasPrevPage: boolean;
+  page: number;
   hasNextPage: boolean;
-  route: string;
-  param?: string;
-  value?: string | string[] | undefined;
+  /** Builds the href for a given page number. */
+  hrefFor: (page: number) => string;
 }
 
-// @param hasPrevPage: to know when to disabled the previous button
-//        hasNextPage: to know when to disabled the next button
-//        route: the actual route of the page, ex: recent, trending, and popular
-//        param: for api calls like page, and perPage
-//        value: for actual value of the param like page=1, perPage=20
-
-const Pagination = ({
-  hasPrevPage,
-  hasNextPage,
-  route,
-  param,
-  value,
-}: PaginationProps) => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
+const Pagination = ({ page, hasNextPage, hrefFor }: PaginationProps) => {
+  if (page <= 1 && !hasNextPage) return null;
 
   return (
-    <>
-      {param ? (
-        <div className="flex gap-5 my-4">
-          <Button
-            disabled={!hasPrevPage}
-            onClick={() => {
-              router.push(`/${route}?${param}=${value}&page=${page - 1}`);
-            }}
-          >
-            Previous Page
-          </Button>
-          <Button
-            disabled={!hasNextPage}
-            onClick={() => {
-              router.push(`/${route}?${param}=${value}&page=${page + 1}`);
-            }}
-          >
-            Next Page
-          </Button>
-        </div>
+    <nav aria-label="Pagination" className="mt-10 flex items-center justify-between gap-3">
+      {page > 1 ? (
+        <Link href={hrefFor(page - 1)} className="btn btn-secondary" rel="prev">
+          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+          Previous
+        </Link>
       ) : (
-        <div className="flex gap-5 my-4">
-          <Button
-            disabled={!hasPrevPage}
-            onClick={() => {
-              router.push(`/${route}?page=${page - 1}`);
-            }}
-          >
-            Previous Page
-          </Button>
-          <Button
-            disabled={!hasNextPage}
-            onClick={() => {
-              router.push(`/${route}?page=${page + 1}`);
-            }}
-          >
-            Next Page
-          </Button>
-        </div>
+        <span className="btn btn-secondary" aria-disabled="true">
+          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+          Previous
+        </span>
       )}
-    </>
+      <span className="num text-sm text-muted">Page {page}</span>
+      {hasNextPage ? (
+        <Link href={hrefFor(page + 1)} className="btn btn-secondary" rel="next">
+          Next
+          <ChevronRight className="h-4 w-4" aria-hidden="true" />
+        </Link>
+      ) : (
+        <span className="btn btn-secondary" aria-disabled="true">
+          Next
+          <ChevronRight className="h-4 w-4" aria-hidden="true" />
+        </span>
+      )}
+    </nav>
   );
 };
 

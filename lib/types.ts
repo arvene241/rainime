@@ -1,118 +1,85 @@
-interface Title {
-  native: string;
-  romaji: string;
-  english: string;
-  userPreferred: string;
+export interface Title {
+  romaji?: string | null;
+  english?: string | null;
+  native?: string | null;
+  userPreferred?: string | null;
 }
 
-export interface Datee {
-  year: number;
-  month: number;
-  day: number;
+export interface FuzzyDate {
+  year?: number | null;
+  month?: number | null;
+  day?: number | null;
 }
 
-export interface Sources {
-  url: string;
-  isM3U8: boolean;
-  quality: string;
-}
-
-export interface Recommendations {
-  id: string;
-  title: Title;
-  status: string;
-  episodes: number;
-  image: string;
-  cover: string;
-  rating: number;
-  type: string;
-}
-
-export interface Episodes {
-  id: string;
-  title: string;
-  description: string;
-  number: number;
-  image: string;
-  airdate: string;
-}
-
-export interface AnimeResult {
-  id: string;
-  title: Title;
-  image: string;
-  type: string;
-  rating: number;
-  releaseDate: string;
-  currentEpisodeCount: number;
-  totalEpisodes: number;
-}
-
-export interface AnimeTrending {
-  id: string;
-  title: Title;
-  description: string;
-  cover: string;
-  image: string;
-  genres: string[];
-  type: string;
-  rating: number;
-  releaseDate: string;
-}
-
-export interface RecentAnime {
-  id: string;
-  title: Title;
-  image: string;
-  genres: string[];
-  type: string;
-  rating: number;
-  episodeId: string;
-  episodeNumber: number;
-  episodeTitle: string;
-}
-
-export interface AnimeInfo {
-  id: string;
-  title: Title;
-  image: string;
-  popularity: number;
-  cover: string;
-  description: string;
-  status: string;
-  genres: string[];
-  studios: string[];
-  totalEpisodes: number;
-  currentEpisodes: number;
-  type: string;
-  rating: number;
-  subOrDub: string;
-  recommendations: Recommendations[];
-  episodes: Episodes[];
-  startDate: Datee;
-  endDate: Datee;
-  season: string
-  releaseDate: string;
-  duration: number;
-}
-
-export interface PopularAnime {
-  id: string;
-  title: Title;
-  image: string;
-  description: string;
-  status: string;
-  cover: string;
-  rating: number;
-  genres: string[];
-  totalEpisodes: number;
-  type: string;
-}
-
-export interface AnimeData {
+export interface Paged<T> {
   currentPage: number;
   hasNextPage: boolean;
-  totalPages: number;
-  totalResults: number;
-  results: [];
+  results: T[];
+}
+
+export interface AnimeSummary {
+  id: string;
+  title: Title;
+  image?: string | null;
+  cover?: string | null;
+  color?: string | null;
+  description?: string | null;
+  status?: string | null;
+  rating?: number | null;
+  genres?: string[];
+  type?: string | null;
+  season?: string | null;
+  releaseDate?: number | null;
+  totalEpisodes?: number | null;
+  duration?: number | null;
+  nextAiring?: { episode: number; airingAt: number } | null;
+}
+
+/** An episode that aired recently, from AniList's airing schedule. */
+export interface RecentEpisode {
+  id: string;
+  title: Title;
+  image?: string | null;
+  type?: string | null;
+  episodeNumber: number;
+  airingAt: number;
+}
+
+/** A licensed streaming service listed for a show on AniList. */
+export interface StreamingLink {
+  site: string;
+  url: string;
+  color?: string | null;
+  icon?: string | null;
+  language?: string | null;
+}
+
+export interface OfficialEpisode {
+  number: number | null;
+  title: string;
+  url: string;
+  site: string;
+  thumbnail?: string | null;
+}
+
+export interface AnimeInfo extends AnimeSummary {
+  startDate?: FuzzyDate;
+  endDate?: FuzzyDate;
+  studios: string[];
+  recommendations: AnimeSummary[];
+  streamingLinks: StreamingLink[];
+  officialEpisodes: OfficialEpisode[];
+  trailer?: { id: string; site: string } | null;
+}
+
+/** The merged episode list the UI renders. */
+export interface Episode {
+  number: number;
+  title?: string | null;
+  image?: string | null;
+  /** Official YouTube upload of this episode, playable in the site. */
+  youtubeId?: string | null;
+  /** Official page for this episode on a licensed service. */
+  officialUrl?: string | null;
+  officialSite?: string | null;
 }

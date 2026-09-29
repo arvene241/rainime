@@ -1,25 +1,22 @@
-import { Button } from "@/components/ui/button";
-import { ArrowLeftCircle } from "lucide-react";
 import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <section className="w-full h-[calc(100vh-56px)] flex flex-col items-center justify-center gap-8 text-center">
-      <h1 className="text-9xl font-semibold">404</h1>
-      <div>
-        <h2 className="text-3xl pb-2">
-          Oops, sorry we can&apos;t find that page!
-        </h2>
-        <p className="text-sm">
-          Either something went wrong or the page doesn&apos;t exist anymore.
-        </p>
-      </div>
-      <Button asChild>
-        <Link href="/">
-          <ArrowLeftCircle className="w-4 h-4 mr-2" />
-          Back to Homepage
+    <div className="container flex min-h-[60svh] flex-col items-start justify-center gap-5 py-16">
+      <p className="num text-sm text-muted">404</p>
+      <h1 className="display max-w-2xl text-4xl md:text-5xl">This page isn’t on the sheet</h1>
+      <p className="max-w-prose text-muted">
+        The link may be old, or the show was removed from the catalogue. Search for it by name, or
+        start from what&apos;s new.
+      </p>
+      <div className="flex flex-wrap gap-2">
+        <Link href="/" className="btn btn-primary">
+          Go home
         </Link>
-      </Button>
-    </section>
+        <Link href="/recently-updated" className="btn btn-secondary">
+          New episodes
+        </Link>
+      </div>
+    </div>
   );
 }

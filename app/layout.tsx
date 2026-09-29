@@ -1,32 +1,60 @@
-import { cn } from "@/lib/utils";
 import "./globals.css";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Archivo, JetBrains_Mono } from "next/font/google";
 import Header from "@/components/Header";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import Footer from "@/components/Footer";
+import { siteConfig } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 
-const inter = Inter({ subsets: ["latin"] });
+const archivo = Archivo({
+  subsets: ["latin"],
+  variable: "--font-archivo",
+  display: "swap",
+});
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "Rainime",
-  description:
-    "Free anime streaming website where you can watch English Subbed and Dubbed anime online. WATCH NOW! No Ads GUARANTEED!",
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: "rainime",
+    template: "%s · rainime",
+  },
+  description: siteConfig.description,
+  applicationName: siteConfig.name,
+  openGraph: {
+    siteName: siteConfig.name,
+    type: "website",
+  },
+  appleWebApp: {
+    title: siteConfig.name,
+    statusBarStyle: "black-translucent",
+  },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export const viewport: Viewport = {
+  themeColor: "#15191f",
+  colorScheme: "dark",
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={cn("min-h-screen bg-background", inter.className)}>
-        <div className="relative">
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <Header />
-            {children}
-          </ThemeProvider>
-        </div>
+    <html lang="en" className={cn(archivo.variable, mono.variable)}>
+      <body className="flex min-h-screen flex-col">
+        <a
+          href="#main"
+          className="btn btn-primary sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60]"
+        >
+          Skip to content
+        </a>
+        <Header />
+        <main id="main" className="flex-1">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );

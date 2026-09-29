@@ -1,24 +1,25 @@
-import PopularAnime from "@/components/PopularAnime";
-import RecentlyUpdated from "@/components/RecentlyUpdated";
+import type { Metadata } from "next";
+import BrowsePage from "@/components/BrowsePage";
+import { getRecentEpisodes } from "@/lib/api";
+import { pageParam } from "@/lib/utils";
 
-const Recently = ({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) => {
-  const page = searchParams.page ? Number(searchParams.page) : 1;
-  const perPage = searchParams.page ? Number(searchParams.page) : 40;
+export const metadata: Metadata = { title: "New episodes" };
+
+type Props = { searchParams: { [key: string]: string | string[] | undefined } };
+
+export default async function RecentlyUpdated({ searchParams }: Props) {
+  const page = pageParam(searchParams.page);
+  const result = await getRecentEpisodes(page, 30);
 
   return (
-    <section className="container w-full mt-8">
-      <div className="w-full flex flex-col lg:flex-row gap-12">
-        <div className="w-full max-w-[990px]">
-          <RecentlyUpdated page={page} perPage={perPage} pagination={true} />
-        </div>
-        <PopularAnime />
-      </div>
-    </section>
+    <BrowsePage
+      kind="episode"
+      title="New episodes"
+      tone="var(--tone-1)"
+      page={page}
+      result={result}
+      empty="No new episodes right now"
+      hrefFor={(p) => `/recently-updated?page=${p}`}
+    />
   );
-};
-
-export default Recently;
+}

@@ -1,62 +1,49 @@
-import AnimeCard from "@/components/AnimeCard";
-import Pagination from "@/components/Pagination";
-import PopularAnime from "@/components/PopularAnime";
-import { AnimeResult } from "@/lib/types";
+import type { Metadata } from "next";
+import BrowsePage from "@/components/BrowsePage";
+import StateMessage from "@/components/StateMessage";
+import { searchAnime } from "@/lib/api";
+import { pageParam } from "@/lib/utils";
 
-const getData = async ({ url }: { url: string }) => {
-  const res = await fetch(url);
-  const data = await res.json();
+type Props = { searchParams: Promise<{ [key: string]: string | string[] | undefined }> };
 
-  // Recommendation: handle errors
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error("Failed to fetch data");
+const keywordOf = (value: string | string[] | undefined) =>
+  (Array.isArray(value) ? value[0] : value)?.trim() ?? "";
+
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+  const keyword = keywordOf(searchParams.keyword);
+  return { title: keyword ? `“${keyword}”` : "Search", robots: { index: false } };
+}
+
+export default async function Search(props: Props) {
+  const searchParams = await props.searchParams;
+  const keyword = keywordOf(searchParams.keyword);
+  const page = pageParam(searchParams.page);
+
+  if (!keyword) {
+    return (
+      <div className="container pt-8 md:pt-12">
+        <h1 className="display mb-5 text-2xl md:text-[1.75rem]">Search</h1>
+        <StateMessage
+          title="Type a title in the search box above"
+          body="English, romaji and Japanese titles all work."
+          action={{ href: "/trending", label: "Browse trending instead" }}
+        />
+      </div>
+    );
   }
 
-  return data;
-};
-
-const Search = async ({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) => {
-  const page = searchParams.page;
-  const keyword = searchParams.keyword;
-
-  const url = `https://consumet-mocha.vercel.app/meta/anilist`;
-
-  const data = await getData({
-    url: `${url}/${keyword}${page ? `?page=${page}` : ""}`,
-  });
-  const results: AnimeResult[] = data.results;
+  const result = await searchAnime(keyword, page);
 
   return (
-    <section className="container w-full mt-8">
-      <div className="w-full flex flex-col lg:flex-row gap-12">
-        <div className="w-full max-w-[990px]">
-          <h1 className="font-bold text-xl pb-4">Search Results for: {keyword}</h1>
-          <div className="flex flex-wrap gap-[14px]">
-            {results.map((result) => (
-              <AnimeCard anime={result} key={result.id} />
-            ))}
-          </div>
-          {data.hasNextPage || Number(page) > 1 ? (
-            <Pagination
-              hasPrevPage={page ? Number(page) > 1 : false}
-              hasNextPage={data.hasNextPage}
-              route="search"
-              param="keyword"
-              value={keyword}
-            />
-          ) : (
-            <></>
-          )}
-        </div>
-        <PopularAnime />
-      </div>
-    </section>
+    <BrowsePage
+      kind="show"
+      title={`Results for “${keyword}”`}
+      tone="var(--tone-2)"
+      page={page}
+      result={result}
+      empty={`No titles match “${keyword}”. Check the spelling or try the Japanese title.`}
+      hrefFor={(p) => `/search?keyword=${encodeURIComponent(keyword)}&page=${p}`}
+    />
   );
-};
-
-export default Search;
+}
