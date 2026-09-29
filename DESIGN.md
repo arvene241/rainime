@@ -34,7 +34,9 @@ Archivo for everything; JetBrains Mono (`.num`) for episode numbers, dates and c
 
 ## Icons
 
-UI icons are `lucide-react`, 16–20px, stroke style. The brand mark is the peg bar in `components/Logo.tsx`; `app/icon.svg`, `app/favicon.ico`, `app/apple-icon.png` and `public/icon-*.png` are the same mark on a graphite tile.
+UI icons are rainime's own set in `components/icons.tsx`: a 20px grid, 1.75 stroke, square caps and mitred joins like a ruled pencil line, sized 16–20px with `h-`/`w-` classes. A few borrow from the desk: `Spinner` is a ring of film frames, `Episodes` an exposure sheet, `Menu` ends on a short rule. Add new icons there rather than pulling in an icon library.
+
+The brand mark is a punched animation sheet (slot, round, slot peg holes) laid askew at -8°, with three tapered red-pencil rain strokes: rain + anime. `components/Logo.tsx` draws it inline from tokens; `app/icon.svg`, `app/favicon.ico` (16/32/48), `app/apple-icon.png` and `public/icon-*.png` are the same drawing on a graphite tile (the maskable icon is full-bleed with the mark inset to the safe zone).
 
 ## Rules
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ExternalLink, Play, TriangleAlert } from "lucide-react";
+import { ExternalLink, Play, Alert } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
 export type EmbedSource =
@@ -171,7 +171,7 @@ const VideoEmbed = ({ source, title, poster, label = "Play", fallback, note, cla
           className="relative flex h-full flex-col items-start justify-center gap-3 p-5 sm:p-8"
           style={{ color: "oklch(0.97 0.005 250)" }}
         >
-          <TriangleAlert className="h-6 w-6 text-accent" aria-hidden="true" />
+          <Alert className="h-6 w-6 text-accent" aria-hidden="true" />
           <p className="display text-lg sm:text-xl">This video can’t play here</p>
           <p className="max-w-md text-sm" style={{ color: "oklch(0.86 0.012 250)" }}>
             {reasonFor(errorCode, source)}
@@ -232,7 +232,7 @@ const VideoEmbed = ({ source, title, poster, label = "Play", fallback, note, cla
             style={{ background: "color-mix(in oklch, var(--scrim) 45%, transparent)" }}
           />
           <span className="btn btn-primary relative shadow-pop transition-transform group-hover:scale-[1.03]">
-            <Play className="h-4 w-4 fill-current" aria-hidden="true" />
+            <Play className="h-4 w-4" aria-hidden="true" />
             {label}
           </span>
         </button>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronLeft, ChevronRight, ExternalLink, Tv } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, Screen } from "@/components/icons";
 import AnimeCard from "@/components/AnimeCard";
 import CardGrid from "@/components/CardGrid";
 import EpisodeList from "@/components/EpisodeList";
@@ -209,7 +209,7 @@ function NotPlayable({
         style={{ background: "color-mix(in oklch, var(--scrim) 84%, transparent)" }}
       />
       <div className="relative flex max-w-lg flex-col gap-3 p-5 sm:p-8" style={{ color: "oklch(0.97 0.005 250)" }}>
-        <Tv className="h-6 w-6 text-accent" aria-hidden="true" />
+        <Screen className="h-6 w-6 text-accent" aria-hidden="true" />
         <p className="display text-xl sm:text-2xl">{heading}</p>
         <p className="text-sm" style={{ color: "oklch(0.86 0.012 250)" }}>
           {body}

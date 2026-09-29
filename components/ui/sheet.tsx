@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
+import { Close } from "@/components/icons";
 
 import { cn } from "@/lib/utils";
 
@@ -52,7 +52,7 @@ const SheetContent = React.forwardRef<
     >
       {children}
       <SheetPrimitive.Close className="btn btn-ghost btn-icon absolute right-3 top-3">
-        <X className="h-5 w-5" />
+        <Close className="h-5 w-5" />
         <span className="sr-only">Close</span>
       </SheetPrimitive.Close>
     </SheetPrimitive.Content>

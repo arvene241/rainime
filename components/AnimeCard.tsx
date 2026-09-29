@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Play } from "lucide-react";
+import { Play } from "@/components/icons";
 import type { AnimeSummary, RecentEpisode } from "@/lib/types";
 import { animeHref, timeAgo, titleCase, titleOf, watchHref } from "@/lib/utils";
 
@@ -52,7 +52,7 @@ const AnimeCard = (props: CardProps) => {
         )}
         {props.kind === "episode" && (
           <span className="badge badge-accent num absolute bottom-2 left-2">
-            <Play className="h-3 w-3 fill-current" aria-hidden="true" />
+            <Play className="h-3 w-3" aria-hidden="true" />
             EP {props.anime.episodeNumber}
           </span>
         )}

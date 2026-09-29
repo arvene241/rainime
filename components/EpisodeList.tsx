@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { ExternalLink, Play } from "lucide-react";
+import { ExternalLink, Play } from "@/components/icons";
 import type { Episode } from "@/lib/types";
 import { cn, watchHref } from "@/lib/utils";
 

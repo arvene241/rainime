@@ -1,4 +1,4 @@
-import { ExternalLink } from "lucide-react";
+import { ExternalLink } from "@/components/icons";
 import type { StreamingLink } from "@/lib/types";
 
 /** Licensed services that carry the show, as listed on AniList. */

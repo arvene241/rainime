@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Info, Play } from "lucide-react";
+import { Info, Play } from "@/components/icons";
 import type { AnimeSummary } from "@/lib/types";
 import { airedCount, animeHref, cleanDescription, cn, formatScore, titleCase, titleOf, watchHref } from "@/lib/utils";
 
@@ -58,7 +58,7 @@ const Spotlight = ({ items }: { items: AnimeSummary[] }) => {
             <div className="mt-5 flex flex-wrap gap-2">
               {airedCount(current) > 0 && (
                 <Link href={watchHref(current.id, 1)} className="btn btn-primary">
-                  <Play className="h-4 w-4 fill-current" aria-hidden="true" />
+                  <Play className="h-4 w-4" aria-hidden="true" />
                   Start watching
                 </Link>
               )}

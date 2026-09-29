@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CalendarClock, ListVideo, Play } from "lucide-react";
+import { Airing, Episodes, Play } from "@/components/icons";
 import AnimeCard from "@/components/AnimeCard";
 import CardGrid from "@/components/CardGrid";
 import EpisodeList from "@/components/EpisodeList";
@@ -124,7 +124,7 @@ export default async function InfoPage({ params }: Props) {
             {first ? (
               <>
                 <Link href={watchHref(anime.id, first.number)} className="btn btn-primary">
-                  <Play className="h-4 w-4 fill-current" aria-hidden="true" />
+                  <Play className="h-4 w-4" aria-hidden="true" />
                   Play episode {first.number}
                 </Link>
                 {latest && latest.number !== first.number && (
@@ -139,14 +139,14 @@ export default async function InfoPage({ params }: Props) {
               </span>
             )}
             <a href="#episodes" className="btn btn-ghost">
-              <ListVideo className="h-4 w-4" aria-hidden="true" />
+              <Episodes className="h-4 w-4" aria-hidden="true" />
               All episodes
             </a>
           </div>
 
           {anime.nextAiring && (
             <p className="mt-4 flex items-center gap-2 text-sm text-muted">
-              <CalendarClock className="h-4 w-4 flex-none text-accent-2" aria-hidden="true" />
+              <Airing className="h-4 w-4 flex-none text-accent-2" aria-hidden="true" />
               <span>
                 Episode {anime.nextAiring.episode} airs <LocalTime unixSeconds={anime.nextAiring.airingAt} />
               </span>

@@ -1,20 +1,28 @@
 import { cn } from "@/lib/utils";
 
-/** Wordmark with an animation peg bar: one round peg flanked by two flat ones. */
+/**
+ * Wordmark with the rainime mark: a punched animation sheet, laid slightly
+ * askew on the desk, with three red-pencil rain strokes drawn across it.
+ * Same drawing as app/icon.svg, without the tile.
+ */
+const Mark = ({ className }: { className?: string }) => (
+  <svg viewBox="84 83 344 372" aria-hidden="true" className={cn("flex-none", className)}>
+    <path
+      fill="var(--ink)"
+      fillRule="evenodd"
+      transform="rotate(-8 256 270)"
+      d="M122 104h268a14 14 0 0 1 14 14v302a14 14 0 0 1-14 14H122a14 14 0 0 1-14-14V118a14 14 0 0 1 14-14ZM160 136h28a12 12 0 0 1 0 24h-28a12 12 0 0 1 0-24ZM324 136h28a12 12 0 0 1 0 24h-28a12 12 0 0 1 0-24ZM239 148a17 17 0 1 0 34 0a17 17 0 1 0-34 0Z"
+    />
+    <path
+      fill="var(--accent)"
+      d="M233.3 198.3L145.2 397.2A20 20 0 0 0 182.8 410.8L242.7 201.7A5 5 0 0 0 233.3 198.3ZM319.8 194.5L249.1 349.9A18 18 0 0 0 282.9 362.1L328.2 197.5A4.5 4.5 0 0 0 319.8 194.5ZM386.2 248.6L337.9 348.9A15 15 0 0 0 366.1 359.1L393.8 251.4A4 4 0 0 0 386.2 248.6Z"
+    />
+  </svg>
+);
+
 const Logo = ({ className }: { className?: string }) => (
   <span className={cn("flex items-center gap-2", className)}>
-    <svg
-      viewBox="0 0 32 14"
-      width="32"
-      height="14"
-      aria-hidden="true"
-      className="flex-none text-accent"
-    >
-      <rect x="0.5" y="8" width="31" height="5.5" rx="1.5" fill="currentColor" opacity="0.35" />
-      <rect x="2.5" y="3.5" width="7" height="5.5" rx="1" fill="currentColor" />
-      <circle cx="16" cy="5.5" r="3.5" fill="currentColor" />
-      <rect x="22.5" y="3.5" width="7" height="5.5" rx="1" fill="currentColor" />
-    </svg>
+    <Mark className="h-6 w-auto" />
     <span className="display text-[1.3125rem] leading-none">rainime</span>
   </span>
 );

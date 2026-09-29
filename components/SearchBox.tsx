@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { Loader2, Search, X } from "lucide-react";
+import { Spinner, Search, Close } from "@/components/icons";
 import type { AnimeSummary } from "@/lib/types";
 import { animeHref, cn, titleCase, titleOf } from "@/lib/utils";
 
@@ -156,7 +156,7 @@ const SearchBox = () => {
           className="h-11 w-full rounded-control border border-line-strong bg-surface pl-9 pr-10 text-[0.9375rem] text-ink placeholder:text-muted focus:border-accent-2 focus:outline-none [&::-webkit-search-cancel-button]:hidden"
         />
         {status === "loading" ? (
-          <Loader2
+          <Spinner
             className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted"
             aria-hidden="true"
           />
@@ -172,7 +172,7 @@ const SearchBox = () => {
               }}
               className="absolute right-1 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-control text-muted hover:text-ink"
             >
-              <X className="h-4 w-4" />
+              <Close className="h-4 w-4" />
             </button>
           )
         )}
